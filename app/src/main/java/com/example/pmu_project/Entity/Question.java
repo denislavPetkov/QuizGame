@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.Entity;
 
 public class Question {
     private String question;
@@ -13,15 +13,13 @@ public class Question {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
     public String getAnswer() {
         return answer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    @Override
+    public String toString() {
+        return this.question + ", отговор: " + this.answer;
     }
+
 }

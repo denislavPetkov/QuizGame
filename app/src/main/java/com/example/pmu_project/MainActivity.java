@@ -9,18 +9,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.pmu_project.IService.IMessageHelper;
+import com.example.pmu_project.Entity.Question;
 import com.example.pmu_project.IService.IQuestionGenerator;
+import com.example.pmu_project.IService.IResults;
+import com.example.pmu_project.Service.QuestionGenerator;
+import com.example.pmu_project.Service.Results;
 
 public class MainActivity extends AppCompatActivity {
 
     private long delayMs = 1000;
 
     private TextView questionTextView;
+    private TextView totalQuestionsTextView;
     private TextView answerTextView;
     private Button submitAnswerButton;
 
-    private IQuestionGenerator questionGenerator = new QuestionGenerator();
+    static private IQuestionGenerator questionGeneratorInterface = new QuestionGenerator();
+    static private IResults resultsInterface = new Results(questionGeneratorInterface.GetAllQustionsInt());
+
+    private static int currentQuestion = 0;
 
     private AlertDialog.Builder alertDialogBuilder;
 
@@ -29,26 +36,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        alertDialogBuilder = new AlertDialog.Builder(this);
+        currentQuestion++;
 
+        alertDialogBuilder = new AlertDialog.Builder(this);
+        totalQuestionsTextView = findViewById(R.id.totalQuestionsTextView);
         questionTextView = findViewById(R.id.questionTextView);
         answerTextView = findViewById(R.id.answerEditText);
         submitAnswerButton = findViewById(R.id.submitAnswerButton);
 
-        Question question = questionGenerator.GetQuestion();
+        totalQuestionsTextView.setText(currentQuestion + "/" + questionGeneratorInterface.GetAllQustionsInt());
+
+        Question question = questionGeneratorInterface.GetQuestion();
         questionTextView.setText(question.getQuestion());
+
 
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!answerTextView.getText().toString().equals(question.getAnswer())){
-                    IMessageHelper.showMessage(alertDialogBuilder, "Wrong!", delayMs);
+                if(answerTextView.getText().toString().equals(question.getAnswer())){
+                    resultsInterface.AddCorrectlyAnsweredQuestion(question);
+                } else {
+                    resultsInterface.AddCWronglyAnsweredQuestion(question, answerTextView.getText().toString());
                 }
-                IMessageHelper.showMessage(alertDialogBuilder, "GJ!", delayMs);
+
+                if (currentQuestion == questionGeneratorInterface.GetAllQustionsInt()){
+                    MainActivity.this.startActivity(new Intent(MainActivity.this, ResultsActivity.class));
+                    return;
+                }
                 MainActivity.this.startActivity(new Intent(MainActivity.this, MainActivity.class));
             }
         });
     }
 
+    public static IResults GetResults(){
+        return resultsInterface;
+    }
 
 }

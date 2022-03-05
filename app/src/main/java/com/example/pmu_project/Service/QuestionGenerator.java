@@ -1,6 +1,7 @@
-package com.example.pmu_project;
+package com.example.pmu_project.Service;
 
 import com.example.pmu_project.IService.IQuestionGenerator;
+import com.example.pmu_project.Entity.Question;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.Random;
 
 public class QuestionGenerator implements IQuestionGenerator {
 
-    public static Question currentQuestion = null;
     private static List<Question> questions = null;
+    private static int numberOfQuestions = 0;
+
 
     public QuestionGenerator(){
         GenerateQuestions();
@@ -19,7 +21,7 @@ public class QuestionGenerator implements IQuestionGenerator {
             questions = new ArrayList<Question>();
             questions.add(new Question("тест1?", "тест1"));
             questions.add(new Question("тест2?", "тест2"));
-
+            numberOfQuestions = questions.size();
         }
     }
 
@@ -34,4 +36,10 @@ public class QuestionGenerator implements IQuestionGenerator {
 
         return questions.remove(x);
     }
+
+    public int GetAllQustionsInt(){
+        return numberOfQuestions;
+    }
+
+
 }
