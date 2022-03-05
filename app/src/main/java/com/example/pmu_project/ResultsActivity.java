@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.pmu_project.IService.IDatabase;
+import com.example.pmu_project.Service.Database;
 import com.example.pmu_project.Entity.Question;
 import com.example.pmu_project.IService.IResults;
 
@@ -26,6 +28,8 @@ public class ResultsActivity extends AppCompatActivity {
     private Button correctlyAnsweredQuestions;
     private Button mainMenuButton;
 
+    private IDatabase db = new Database(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +42,12 @@ public class ResultsActivity extends AppCompatActivity {
         correctlyAnsweredQuestions = findViewById(R.id.correctlyAnsweredQuestionsButton);
         mainMenuButton = findViewById(R.id.mainMenuButton);
 
-        IResults results = MainActivity.GetResults();
+        IResults results = QuizActivity.GetResults();
         correctAnswersTextView.setText(String.valueOf("Правилно отговорени " +
                 results.GetAnsweredQuestionsInt() + "  от " +
                 results.GetAllQuestions() + " въпроса"));
 
+        db.AddResultRecord(results);
 
         correctlyAnsweredQuestions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +68,7 @@ public class ResultsActivity extends AppCompatActivity {
                 Map<Question,String> wronglyAnsweredQuestions = results.GetWronglyAnsweredQuestions();
 
                 for (Map.Entry<Question, String> entry : wronglyAnsweredQuestions.entrySet()) {
-                    questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue().toString());
+                    questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue()); // .toString()
                 }
                 ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,android.R.layout.simple_list_item_1,questionsAndAnswers);
                 helperListView.setAdapter(adapter);
