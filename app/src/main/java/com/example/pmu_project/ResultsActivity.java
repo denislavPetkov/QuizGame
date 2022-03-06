@@ -60,7 +60,7 @@ public class ResultsActivity extends AppCompatActivity {
                 ArrayList<String> questionsAndAnswers = new ArrayList<String>();
 
                 for (Map.Entry<Question, String> entry : questionsAndUserAnswers.entrySet()) {
-                    questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue()); // .toString()
+                    questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue());
                 }
                 ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,android.R.layout.simple_list_item_1,questionsAndAnswers);
                 helperListView.setAdapter(adapter);

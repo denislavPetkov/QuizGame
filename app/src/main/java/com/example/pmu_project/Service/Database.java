@@ -113,18 +113,6 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
         db.close();
     }
 
-//    private void CreateResultsTable(){
-//        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_RESULTS
-//                + "("
-//                + KEY_ID                    + " INTEGER PRIMARY KEY,"
-//                + KEY_QUESTION              + " TEXT,"
-//                + KEY_QUESTION_ANSWER       + " TEXT,"
-//                + KEY_QUESTION_USER_ANSWER  + " TEXT"
-//                + ")";
-//        db.execSQL(CREATE_CONTACTS_TABLE);
-//    }
-
-
     public List<String> GetResultsRecordsString(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
@@ -241,7 +229,5 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
         );
         return cursor.moveToFirst();
     }
-
-
 
 }

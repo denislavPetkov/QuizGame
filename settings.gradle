@@ -14,9 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "PMU-Project"
 include ':app'
-
-//sourceControl {
-//    gitRepository("https://github.com/stleary/JSON-java.git") {
-//        producesModule("com.github.json-parser:simple")
-//    }
-//}

@@ -29,6 +29,4 @@ public class Results implements IResults {
     public int GetAnsweredQuestions() {
         return answeredQuestions;
     }
-
-
 }

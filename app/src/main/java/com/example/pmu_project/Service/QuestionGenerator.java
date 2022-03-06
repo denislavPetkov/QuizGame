@@ -25,9 +25,7 @@ public class QuestionGenerator implements IQuestionGenerator {
 
     private  IDatabase db;
 
-    public QuestionGenerator() {
-
-    }
+    public QuestionGenerator() {}
 
     public QuestionGenerator(IDatabase db) throws IOException {
         this.db = db;

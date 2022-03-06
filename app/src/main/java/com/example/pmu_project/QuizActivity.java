@@ -51,9 +51,6 @@ public class QuizActivity extends AppCompatActivity {
             }
         }
 
-
-//        currentQuestion++;
-
         alertDialogBuilder = new AlertDialog.Builder(this);
         totalQuestionsTextView = findViewById(R.id.totalQuestionsTextView);
         questionTextView = findViewById(R.id.questionTextView);
