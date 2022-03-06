@@ -37,6 +37,8 @@ public class ResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+        setTitle("Резултати");
+
 
         correctAnswersTextView = findViewById(R.id.correctAnswersTextView);
         helperListView = findViewById(R.id.helperListView);

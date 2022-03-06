@@ -30,6 +30,7 @@ public class PreviousResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previous_results);
+        setTitle("История");
 
         previousResultsListView = findViewById(R.id.previousResultsListView);
 

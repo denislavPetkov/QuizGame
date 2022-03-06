@@ -24,7 +24,6 @@ public class QuizActivity extends AppCompatActivity {
     private long delayMs = 1000;
 
     private TextView questionTextView;
-    private TextView totalQuestionsTextView;
     private TextView answerTextView;
     private Button submitAnswerButton;
 
@@ -48,13 +47,13 @@ public class QuizActivity extends AppCompatActivity {
             results = new Results();
         }
 
+        setTitle("Въпрос " + results.GetAnsweredQuestions() + "/" + questionGenerator.GetAllQuestionsInt());
+
+
         alertDialogBuilder = new AlertDialog.Builder(this);
-        totalQuestionsTextView = findViewById(R.id.totalQuestionsTextView);
         questionTextView = findViewById(R.id.questionTextView);
         answerTextView = findViewById(R.id.answerEditText);
         submitAnswerButton = findViewById(R.id.submitAnswerButton);
-
-        totalQuestionsTextView.setText(results.GetAnsweredQuestions() + "/" + questionGenerator.GetAllQuestionsInt());
 
         Question question = questionGenerator.GetQuestion();
         questionTextView.setText(question.getQuestion());
