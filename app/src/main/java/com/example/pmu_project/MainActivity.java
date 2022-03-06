@@ -8,7 +8,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.pmu_project.IService.IDatabase;
+import com.example.pmu_project.IService.IQuestionGenerator;
 import com.example.pmu_project.Service.Database;
+import com.example.pmu_project.Service.QuestionGenerator;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +27,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        QuizActivity.ResetResults();
+
+            try {
+                db.LoadDataFromFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         showPreviousResultsButton = findViewById(R.id.showPreviousResultsButton);
         doQuizButton = findViewById(R.id.doQuizButton);
 
@@ -30,13 +43,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MainActivity.this.startActivity(new Intent(MainActivity.this, PreviousResultsActivity.class));
+                return;
             }
         });
 
         doQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.this.startActivity(new Intent(MainActivity.this, QuizActivity.class));
+                MainActivity.this.startActivity(new Intent(MainActivity.this, new QuizActivity().getClass()));
+                return;
             }
         });
     }

@@ -34,13 +34,20 @@ public class PreviousResultsActivity extends AppCompatActivity {
         deleteSavedResultsButton = findViewById(R.id.deleteSavedResultsButton);
 
         List<String> previousResults = db.GetResultsRecordsString();
-        ArrayAdapter adapter = new ArrayAdapter<String>(PreviousResultsActivity.this,android.R.layout.simple_list_item_1,previousResults);
-        previousResultsListView.setAdapter(adapter);
+        if (previousResults == null){
+            // show message
+        }
+        else {
+            ArrayAdapter adapter = new ArrayAdapter<String>(PreviousResultsActivity.this,android.R.layout.simple_list_item_1,previousResults);
+            previousResultsListView.setAdapter(adapter);
+        }
+
 
         goToMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PreviousResultsActivity.this.startActivity(new Intent(PreviousResultsActivity.this, MainActivity.class));
+                return;
             }
         });
 
@@ -49,6 +56,7 @@ public class PreviousResultsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 db.DeleteSavedResults();
                 PreviousResultsActivity.this.startActivity(new Intent(PreviousResultsActivity.this, PreviousResultsActivity.class));
+                return;
             }
         });
     }

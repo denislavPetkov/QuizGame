@@ -10,10 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.pmu_project.Entity.Question;
+import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.IService.IQuestionGenerator;
 import com.example.pmu_project.IService.IResults;
+import com.example.pmu_project.Service.Database;
 import com.example.pmu_project.Service.QuestionGenerator;
 import com.example.pmu_project.Service.Results;
+
+import java.io.IOException;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -24,10 +28,13 @@ public class QuizActivity extends AppCompatActivity {
     private TextView answerTextView;
     private Button submitAnswerButton;
 
-    static private IQuestionGenerator questionGeneratorInterface = new QuestionGenerator();
-    static private IResults resultsInterface = new Results(questionGeneratorInterface.GetAllQustionsInt());
+    private final IDatabase db = new Database(this);
 
-    private static int currentQuestion = 0;
+    static private IQuestionGenerator questionGenerator = null;
+
+    static private IResults results = null;
+
+//    private int currentQuestion = 0;
 
     private AlertDialog.Builder alertDialogBuilder;
 
@@ -36,7 +43,16 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
 
-        currentQuestion++;
+        if (questionGenerator == null){
+            try {
+                questionGenerator = new QuestionGenerator(db);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+//        currentQuestion++;
 
         alertDialogBuilder = new AlertDialog.Builder(this);
         totalQuestionsTextView = findViewById(R.id.totalQuestionsTextView);
@@ -44,31 +60,39 @@ public class QuizActivity extends AppCompatActivity {
         answerTextView = findViewById(R.id.answerEditText);
         submitAnswerButton = findViewById(R.id.submitAnswerButton);
 
-        totalQuestionsTextView.setText(currentQuestion + "/" + questionGeneratorInterface.GetAllQustionsInt());
+        if (results == null) {
+            results = new Results();
+        }
+        totalQuestionsTextView.setText(results.GetAnsweredQuestions() + "/" + questionGenerator.GetAllQuestionsInt());
 
-        Question question = questionGeneratorInterface.GetQuestion();
+        Question question = questionGenerator.GetQuestion();
         questionTextView.setText(question.getQuestion());
-
 
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(answerTextView.getText().toString().equals(question.getAnswer())){
-                    resultsInterface.AddCorrectlyAnsweredQuestion(question);
+                    db.AddAnsweredQuestion(question, question.getAnswer());
+                    results.IncrementCorrectlyAnsweredQuestions();
                 } else {
-                    resultsInterface.AddCWronglyAnsweredQuestion(question, answerTextView.getText().toString());
+                    db.AddAnsweredQuestion(question, answerTextView.getText().toString());
                 }
 
-                if (currentQuestion == questionGeneratorInterface.GetAllQustionsInt()){
+                if (results.GetAnsweredQuestions() >= questionGenerator.GetAllQuestionsInt()){
                     QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class));
                     return;
                 }
+                results.IncrementAnsweredQuestions();
                 QuizActivity.this.startActivity(new Intent(QuizActivity.this, QuizActivity.class));
+                return;
             }
         });
     }
 
     public static IResults GetResults(){
-        return resultsInterface;
+        return results;
+    }
+    public static void ResetResults(){
+        results = null;
     }
 }

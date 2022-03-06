@@ -4,5 +4,5 @@ import com.example.pmu_project.Entity.Question;
 
 public interface IQuestionGenerator {
     public Question GetQuestion();
-    public int GetAllQustionsInt();
+    public int GetAllQuestionsInt();
 }

@@ -9,8 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.pmu_project.Entity.Question;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.IService.IResults;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +24,14 @@ import javax.xml.transform.Result;
 
 public class Database extends SQLiteOpenHelper implements IDatabase {
 
+    private static final String dataFileName = "data.yaml";
+
     private static final int DATABASE_VERSION = 1;
 
     private static final String DATABASE_NAME = "QUIZ_GAME";
 
-    private static final String TABLE_NAME = "PREVIOUS_SCORES";
-
+    private static final String TABLE_NAME_RESULTS = "PREVIOUS_SCORES";
+    private static final String TABLE_NAME_QUESTIONS = "ALL_QUESTIONS";
     private static final String KEY_ID = "id";
     private static final String KEY_QUESTION = "question";
     private static final String KEY_QUESTION_ANSWER = "questionAnswer";
@@ -34,10 +42,79 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-//    public void createTableIfNotExist() {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//
-//        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_RESULTS
+                + "("
+                + KEY_ID                    + " INTEGER PRIMARY KEY,"
+                + KEY_QUESTION              + " TEXT,"
+                + KEY_QUESTION_ANSWER       + " TEXT,"
+                + KEY_QUESTION_USER_ANSWER  + " TEXT"
+                + ")";
+        db.execSQL(CREATE_CONTACTS_TABLE);
+
+        CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_QUESTIONS
+                + "("
+                + KEY_ID                    + " INTEGER PRIMARY KEY,"
+                + KEY_QUESTION              + " TEXT,"
+                + KEY_QUESTION_ANSWER       + " TEXT"
+                + ")";
+        db.execSQL(CREATE_CONTACTS_TABLE);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int
+            newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_RESULTS + "'");
+        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_QUESTIONS + "'");
+        onCreate(db);
+    }
+
+
+    public void LoadDataFromFile() throws IOException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classLoader.getResourceAsStream(dataFileName);
+        ObjectMapper om = new ObjectMapper(new YAMLFactory());
+
+        List<Question> questions = om.readValue(is, new TypeReference<List<Question>>(){});
+
+        AddQuestions(questions);
+    }
+
+    public List<Question> GetCorrectlyAnsweredQuestions(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME_RESULTS,
+                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
+                KEY_QUESTION_ANSWER + "=?",
+                new String[] { KEY_QUESTION_USER_ANSWER },
+                null, null, null,
+                null
+        );
+
+        List<Question> questions = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            questions.add(new Question(cursor.getString(1),cursor.getString(2)));
+        }
+
+        return questions;
+    }
+
+    public void AddAnsweredQuestion(Question question, String userAnswer){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_QUESTION, question.getQuestion());
+        values.put(KEY_QUESTION_ANSWER, question.getAnswer());
+        values.put(KEY_QUESTION_USER_ANSWER, userAnswer);
+        db.insert(TABLE_NAME_RESULTS, null, values);
+
+        db.close();
+    }
+
+//    private void CreateResultsTable(){
+//        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_RESULTS
 //                + "("
 //                + KEY_ID                    + " INTEGER PRIMARY KEY,"
 //                + KEY_QUESTION              + " TEXT,"
@@ -47,60 +124,11 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
 //        db.execSQL(CREATE_CONTACTS_TABLE);
 //    }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME
-                + "("
-                + KEY_ID                    + " INTEGER PRIMARY KEY,"
-                + KEY_QUESTION              + " TEXT,"
-                + KEY_QUESTION_ANSWER       + " TEXT,"
-                + KEY_QUESTION_USER_ANSWER  + " TEXT"
-                + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int
-            newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME + "'");
-        // Повторно създаване на базата от данни
-        onCreate(db);
-    }
-
-//    public int onDeleteTable(){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        int rowsDeleted = db.delete(TABLE_NAME,null,null);
-//        db.close();
-//        return rowsDeleted;
-//    }
-
-    public void AddResultRecord (IResults results){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        for (Question q : results.GetCorrectlyAnsweredQuestions()){
-            values.put(KEY_QUESTION, q.getQuestion());
-            values.put(KEY_QUESTION_ANSWER, q.getAnswer());
-            values.put(KEY_QUESTION_USER_ANSWER, q.getAnswer());
-            db.insert(TABLE_NAME, null, values);
-        }
-
-        Map<Question,String> wronglyAnsweredQuestions = results.GetWronglyAnsweredQuestions();
-        for (Map.Entry<Question, String> entry : wronglyAnsweredQuestions.entrySet()) {
-            values.put(KEY_QUESTION, entry.getKey().getQuestion());
-            values.put(KEY_QUESTION_ANSWER, entry.getKey().getAnswer());
-            values.put(KEY_QUESTION_USER_ANSWER, entry.getValue());
-            db.insert(TABLE_NAME, null, values);
-        }
-
-        // the row ID of the newly inserted row, or -1 if an error occurred
-        db.close(); // Затравяне на връзката с базата от данни
-    }
 
     public List<String> GetResultsRecordsString(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
-                TABLE_NAME,
+                TABLE_NAME_RESULTS,
                 new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
                 null,
                 null,
@@ -110,7 +138,11 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
 
         List<String> previousResults = new ArrayList<>();
 
-        while (cursor.moveToNext()) {
+        if (!cursor.moveToLast()){
+            return null;
+        }
+
+        while (cursor.moveToPrevious()) {
             previousResults.add(cursor.getString(1) + ": " +
                             cursor.getString(2) + ",твоят отговор: " +
                             cursor.getString(3) + "\n");
@@ -120,9 +152,96 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
 
     public void DeleteSavedResults() {
         SQLiteDatabase db = this.getWritableDatabase();
-        int rowsDeleted = db.delete(TABLE_NAME,null,null);
+        int rowsDeleted = db.delete(TABLE_NAME_RESULTS,null,null);
         db.close();
 //        return rowsDeleted;
     }
+
+    public Map<Question, String> GetLastXQuestionsAndAnswers(int x){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME_RESULTS,
+                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
+                null,
+                null,
+                null, null, null,
+                null
+        );
+        if (!cursor.moveToLast()){
+            return null;
+        }
+
+        Map<Question, String> lastXQuestionsAndUserAnswers =  new HashMap<>();
+
+        while (x>0){
+            lastXQuestionsAndUserAnswers.put(new Question(cursor.getString(1),cursor.getString(2)), cursor.getString(3));
+            x--;
+
+            if (!cursor.moveToPrevious()){
+                break;
+            }
+        }
+        return lastXQuestionsAndUserAnswers;
+    }
+
+    public Question GetQuestion(int x){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME_QUESTIONS,
+                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER},
+                KEY_ID + "=?",
+                new String[] {String.valueOf(x)},
+                null, null, null,
+                null
+        );
+        if (!cursor.moveToFirst()){
+            return new Question();
+        }
+        return new Question(cursor.getString(1),cursor.getString(2));
+    }
+
+    private void AddQuestions(List<Question> questions) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        for (Question q : questions){
+            if (doQuestionExistInDb(q)){
+                continue;
+            }
+            values.put(KEY_QUESTION, q.getQuestion());
+            values.put(KEY_QUESTION_ANSWER, q.getAnswer());
+            db.insert(TABLE_NAME_QUESTIONS, null, values);
+        }
+
+        db.close();
+    }
+
+    public int GetAllQuestionsInt(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME_QUESTIONS,
+                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER},
+                null,
+                null,
+                null, null, null,
+                null
+        );
+        return cursor.getCount();
+    }
+
+    private boolean doQuestionExistInDb(Question question){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME_QUESTIONS,
+                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER},
+                KEY_QUESTION + "=?",
+                new String[] {question.getQuestion()},
+                null, null, null,
+                null
+        );
+        return cursor.moveToFirst();
+    }
+
+
 
 }
