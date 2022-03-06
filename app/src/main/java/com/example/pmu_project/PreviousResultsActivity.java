@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.pmu_project.Exceptions.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.Service.Database;
 
@@ -33,13 +36,13 @@ public class PreviousResultsActivity extends AppCompatActivity {
         goToMenuButton = findViewById(R.id.goToMenuButton);
         deleteSavedResultsButton = findViewById(R.id.deleteSavedResultsButton);
 
-        List<String> previousResults = db.GetResultsRecordsString();
-        if (previousResults == null){
-            // show message
-        }
-        else {
+        try {
+            List<String> previousResults = db.GetResultsRecordsString();
             ArrayAdapter adapter = new ArrayAdapter<String>(PreviousResultsActivity.this,android.R.layout.simple_list_item_1,previousResults);
             previousResultsListView.setAdapter(adapter);
+        } catch (EmptyDatabaseException e) {
+            Toast toast = Toast.makeText(this, "Няма предишна история!", Toast.LENGTH_SHORT);
+            toast.show();
         }
 
 

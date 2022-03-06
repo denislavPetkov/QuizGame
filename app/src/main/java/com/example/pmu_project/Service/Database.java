@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.pmu_project.Entity.Question;
+import com.example.pmu_project.Exceptions.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.IService.IResults;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -71,34 +72,18 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
     }
 
 
-    public void LoadDataFromFile() throws IOException {
+    public void LoadDataFromFile() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream is = classLoader.getResourceAsStream(dataFileName);
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
-        List<Question> questions = om.readValue(is, new TypeReference<List<Question>>(){});
-
-        AddQuestions(questions);
-    }
-
-    public List<Question> GetCorrectlyAnsweredQuestions(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(
-                TABLE_NAME_RESULTS,
-                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
-                KEY_QUESTION_ANSWER + "=?",
-                new String[] { KEY_QUESTION_USER_ANSWER },
-                null, null, null,
-                null
-        );
-
-        List<Question> questions = new ArrayList<>();
-
-        while (cursor.moveToNext()) {
-            questions.add(new Question(cursor.getString(1),cursor.getString(2)));
+        try {
+            List<Question> questions = om.readValue(is, new TypeReference<List<Question>>(){});
+            AddQuestions(questions);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return questions;
     }
 
     public void AddAnsweredQuestion(Question question, String userAnswer){
@@ -113,7 +98,7 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
         db.close();
     }
 
-    public List<String> GetResultsRecordsString(){
+    public List<String> GetResultsRecordsString() throws EmptyDatabaseException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_RESULTS,
@@ -127,7 +112,7 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
         List<String> previousResults = new ArrayList<>();
 
         if (!cursor.moveToLast()){
-            return null;
+            throw new EmptyDatabaseException("Database is empty!");
         }
 
         while (cursor.moveToPrevious()) {
@@ -145,7 +130,7 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
 //        return rowsDeleted;
     }
 
-    public Map<Question, String> GetLastXQuestionsAndAnswers(int x){
+    public Map<Question, String> GetLastXQuestionsAndAnswers(int x) throws EmptyDatabaseException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_RESULTS,
@@ -156,7 +141,7 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
                 null
         );
         if (!cursor.moveToLast()){
-            return null;
+           throw new EmptyDatabaseException("Error occurred: Database is empty!");
         }
 
         Map<Question, String> lastXQuestionsAndUserAnswers =  new HashMap<>();
@@ -172,7 +157,7 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
         return lastXQuestionsAndUserAnswers;
     }
 
-    public Question GetQuestion(int x){
+    public Question GetQuestion(int x) throws EmptyDatabaseException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_QUESTIONS,
@@ -183,7 +168,7 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
                 null
         );
         if (!cursor.moveToFirst()){
-            return new Question();
+            throw new EmptyDatabaseException("Database is empty!");
         }
         return new Question(cursor.getString(1),cursor.getString(2));
     }
@@ -204,19 +189,6 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
         db.close();
     }
 
-    public int GetAllQuestionsInt(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(
-                TABLE_NAME_QUESTIONS,
-                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER},
-                null,
-                null,
-                null, null, null,
-                null
-        );
-        return cursor.getCount();
-    }
-
     private boolean doQuestionExistInDb(Question question){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
@@ -228,6 +200,19 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
                 null
         );
         return cursor.moveToFirst();
+    }
+
+    public int GetAllQuestionsInt(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME_QUESTIONS,
+                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER},
+                null,
+                null,
+                null, null, null,
+                null
+        );
+        return cursor.getCount();
     }
 
 }
