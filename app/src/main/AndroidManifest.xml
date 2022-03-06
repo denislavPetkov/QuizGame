@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PMUProject">
         <activity
+            android:name=".PreviousResultsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".QuizActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResultsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
