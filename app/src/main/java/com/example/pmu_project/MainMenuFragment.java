@@ -13,11 +13,6 @@ import android.widget.Button;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.Service.Database;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MainMenuFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MainMenuFragment extends Fragment {
 
     Button doQuizButton;

@@ -18,9 +18,6 @@ import com.example.pmu_project.Service.Database;
 
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- */
 public class HistoryFragment extends Fragment {
 
 
@@ -29,15 +26,9 @@ public class HistoryFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public HistoryFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static HistoryFragment newInstance(int columnCount) {
         HistoryFragment fragment = new HistoryFragment();
         Bundle args = new Bundle();
@@ -60,7 +51,6 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
