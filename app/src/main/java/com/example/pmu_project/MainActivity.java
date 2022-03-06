@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
     }
 
-    private void init(){
+    private void init() {
         db.LoadDataFromFile();
         QuizActivity.ResetResults();
         QuizActivity.ResetQuestions();
