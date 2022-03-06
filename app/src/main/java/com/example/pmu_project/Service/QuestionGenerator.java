@@ -3,6 +3,7 @@ package com.example.pmu_project.Service;
 
 
 import com.example.pmu_project.Entity.Question;
+import com.example.pmu_project.Exceptions.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.IService.IQuestionGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -27,7 +28,7 @@ public class QuestionGenerator implements IQuestionGenerator {
 
     public QuestionGenerator() {}
 
-    public QuestionGenerator(IDatabase db) throws IOException {
+    public QuestionGenerator(IDatabase db) {
         this.db = db;
         GenerateQuestions();
     }
@@ -39,7 +40,7 @@ public class QuestionGenerator implements IQuestionGenerator {
     }
 
     private void loadFromDatabase(){
-        int allQuestions = 5;
+        int numberOfQuestionsInDatabase = db.GetAllQuestionsInt();
 
         int desiredNumOfQuestions = 5;
 
@@ -49,11 +50,16 @@ public class QuestionGenerator implements IQuestionGenerator {
 
         while (addedQuestions.size() < desiredNumOfQuestions) {
             Random ran = new Random();
-            x = ran.nextInt(allQuestions) + 1;
+            x = ran.nextInt(numberOfQuestionsInDatabase) + 1;
             if (addedQuestions.contains(x)) {
                 continue;
             }
-            questions.add(db.GetQuestion(x));
+            try {
+                questions.add(db.GetQuestion(x));
+            } catch (EmptyDatabaseException e) {
+                e.printStackTrace();
+                return;
+            }
             addedQuestions.add(x);
         }
     }

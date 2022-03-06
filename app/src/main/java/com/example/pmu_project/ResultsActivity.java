@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pmu_project.Entity.Question;
+import com.example.pmu_project.Exceptions.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.Service.Database;
 import com.example.pmu_project.IService.IResults;
@@ -42,30 +44,37 @@ public class ResultsActivity extends AppCompatActivity {
         answeredQuestions = findViewById(R.id.allAnsweredQuestionsButton);
         mainMenuButton = findViewById(R.id.mainMenuButton);
 
-        int allQuestionsAnswered = QuizActivity.GetResults().GetAnsweredQuestions();
-        Map<Question, String> questionsAndUserAnswers = db.GetLastXQuestionsAndAnswers(allQuestionsAnswered);
-        if (questionsAndUserAnswers == null){
-            correctAnswersTextView.setText("null");
-        }
 
-        int correctlyAnsweredQuestions = GetCorrectlyAnsweredQuestions(questionsAndUserAnswers);
+        try {
+            int allQuestionsAnswered = QuizActivity.GetResults().GetAnsweredQuestions();
 
-        correctAnswersTextView.setText(String.valueOf("Правилно отговорени " +
-                correctlyAnsweredQuestions + "  от " +
-                allQuestionsAnswered + " въпроса"));
+            Map<Question, String> questionsAndUserAnswers = db.GetLastXQuestionsAndAnswers(allQuestionsAnswered);
 
-        answeredQuestions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<String> questionsAndAnswers = new ArrayList<String>();
+            int correctlyAnsweredQuestions = GetCorrectlyAnsweredQuestions(questionsAndUserAnswers);
 
-                for (Map.Entry<Question, String> entry : questionsAndUserAnswers.entrySet()) {
-                    questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue());
+            correctAnswersTextView.setText(String.valueOf("Правилно отговорени " +
+                    correctlyAnsweredQuestions + "  от " +
+                    allQuestionsAnswered + " въпроса"));
+
+            answeredQuestions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> questionsAndAnswers = new ArrayList<String>();
+
+                    for (Map.Entry<Question, String> entry : questionsAndUserAnswers.entrySet()) {
+                        questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue());
+                    }
+                    ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,android.R.layout.simple_list_item_1,questionsAndAnswers);
+                    helperListView.setAdapter(adapter);
                 }
-                ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,android.R.layout.simple_list_item_1,questionsAndAnswers);
-                helperListView.setAdapter(adapter);
-            }
-        });
+            });
+
+        } catch (EmptyDatabaseException e) {
+            Toast toast = Toast.makeText(this, "Грешка при записването на резултатите!", Toast.LENGTH_SHORT);
+            toast.show();
+            ResultsActivity.this.startActivity(new Intent(ResultsActivity.this, MainActivity.class));
+            return;
+        }
 
         mainMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override

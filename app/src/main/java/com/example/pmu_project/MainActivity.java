@@ -27,15 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        QuizActivity.ResetResults();
-        QuizActivity.ResetQuestions();
-
-            try {
-                db.LoadDataFromFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+        init();
 
         showPreviousResultsButton = findViewById(R.id.showPreviousResultsButton);
         doQuizButton = findViewById(R.id.doQuizButton);
@@ -57,5 +49,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void init(){
+        db.LoadDataFromFile();
+        QuizActivity.ResetResults();
+        QuizActivity.ResetQuestions();
+    }
 
 }

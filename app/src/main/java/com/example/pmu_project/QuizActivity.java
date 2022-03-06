@@ -42,11 +42,10 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_question);
 
         if (questionGenerator == null){
-            try {
-                questionGenerator = new QuestionGenerator(db);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            questionGenerator = new QuestionGenerator(db);
+        }
+        if (results == null) {
+            results = new Results();
         }
 
         alertDialogBuilder = new AlertDialog.Builder(this);
@@ -55,9 +54,6 @@ public class QuizActivity extends AppCompatActivity {
         answerTextView = findViewById(R.id.answerEditText);
         submitAnswerButton = findViewById(R.id.submitAnswerButton);
 
-        if (results == null) {
-            results = new Results();
-        }
         totalQuestionsTextView.setText(results.GetAnsweredQuestions() + "/" + questionGenerator.GetAllQuestionsInt());
 
         Question question = questionGenerator.GetQuestion();
