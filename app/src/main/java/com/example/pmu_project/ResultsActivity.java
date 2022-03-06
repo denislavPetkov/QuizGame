@@ -15,11 +15,8 @@ import com.example.pmu_project.Entity.Question;
 import com.example.pmu_project.Exceptions.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.Service.Database;
-import com.example.pmu_project.IService.IResults;
 
-import java.io.Console;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ResultsActivity extends AppCompatActivity {

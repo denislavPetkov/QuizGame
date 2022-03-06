@@ -1,52 +1,35 @@
 package com.example.pmu_project;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.IService.IQuestionGenerator;
 import com.example.pmu_project.Service.Database;
-import com.example.pmu_project.Service.QuestionGenerator;
+import com.example.pmu_project.databinding.ActivityMainBinding;
+import com.google.android.material.tabs.TabLayout;
 
-import java.io.IOException;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    Button showPreviousResultsButton;
-    Button doQuizButton;
+    private ActivityMainBinding binding;
 
     private final IDatabase db = new Database(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         init();
 
-        showPreviousResultsButton = findViewById(R.id.showPreviousResultsButton);
-        doQuizButton = findViewById(R.id.doQuizButton);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        showPreviousResultsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.this.startActivity(new Intent(MainActivity.this, PreviousResultsActivity.class));
-                return;
-            }
-        });
-
-        doQuizButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.this.startActivity(new Intent(MainActivity.this, new QuizActivity().getClass()));
-                return;
-            }
-        });
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = binding.viewPager;
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = binding.tabs;
+        tabs.setupWithViewPager(viewPager);
     }
 
     private void init(){
@@ -54,5 +37,4 @@ public class MainActivity extends AppCompatActivity {
         QuizActivity.ResetResults();
         QuizActivity.ResetQuestions();
     }
-
 }
