@@ -34,8 +34,6 @@ public class QuizActivity extends AppCompatActivity {
 
     static private IResults results = null;
 
-//    private int currentQuestion = 0;
-
     private AlertDialog.Builder alertDialogBuilder;
 
     @Override
@@ -89,6 +87,7 @@ public class QuizActivity extends AppCompatActivity {
     public static IResults GetResults(){
         return results;
     }
+    public static void ResetQuestions(){ questionGenerator = null;}
     public static void ResetResults(){
         results = null;
     }

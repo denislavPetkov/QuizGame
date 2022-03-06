@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         QuizActivity.ResetResults();
+        QuizActivity.ResetQuestions();
 
             try {
                 db.LoadDataFromFile();

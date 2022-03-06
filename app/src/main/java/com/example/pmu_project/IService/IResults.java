@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface IResults {
-    public int GetCorrectlyAnsweredQuestionsInt();
     public int GetAnsweredQuestions();
 
     public void IncrementCorrectlyAnsweredQuestions();
