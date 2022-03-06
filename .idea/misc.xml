@@ -3,10 +3,25 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.4945" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.4945" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout-land/activity_main.xml" value="0.321875" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout-land/activity_previous_results.xml" value="0.321875" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout-land/activity_question.xml" value="0.321875" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout-land/activity_results.xml" value="0.321875" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout-land/fragment_main_menu.xml" value="0.321875" />
         <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/activity_main.xml" value="0.5249094202898551" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/activity_main2.xml" value="0.2796352583586626" />
         <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/activity_previous_results.xml" value="0.575" />
         <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/activity_question.xml" value="0.575" />
         <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/activity_results.xml" value="0.2796352583586626" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/fragment_blank.xml" value="0.2796352583586626" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/fragment_history.xml" value="0.2798913043478261" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/fragment_history_list.xml" value="0.2798913043478261" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/fragment_item.xml" value="0.2798913043478261" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/fragment_item_list.xml" value="0.27279635258358664" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/fragment_main.xml" value="0.2796352583586626" />
+        <entry key="..\:/Users/denis/Desktop/workspace/denislavPetkov/TU/PMUProject/app/src/main/res/layout/fragment_main_menu.xml" value="0.2798913043478261" />
       </map>
     </option>
   </component>

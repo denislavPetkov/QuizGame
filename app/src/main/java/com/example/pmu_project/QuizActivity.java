@@ -24,7 +24,6 @@ public class QuizActivity extends AppCompatActivity {
     private long delayMs = 1000;
 
     private TextView questionTextView;
-    private TextView totalQuestionsTextView;
     private TextView answerTextView;
     private Button submitAnswerButton;
 
@@ -41,20 +40,19 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
 
-        if (questionGenerator == null){
+        if (questionGenerator == null) {
             questionGenerator = new QuestionGenerator(db);
         }
         if (results == null) {
             results = new Results();
         }
 
+        setTitle("Въпрос " + results.GetAnsweredQuestions() + "/" + questionGenerator.GetAllQuestionsInt());
+
         alertDialogBuilder = new AlertDialog.Builder(this);
-        totalQuestionsTextView = findViewById(R.id.totalQuestionsTextView);
         questionTextView = findViewById(R.id.questionTextView);
         answerTextView = findViewById(R.id.answerEditText);
         submitAnswerButton = findViewById(R.id.submitAnswerButton);
-
-        totalQuestionsTextView.setText(results.GetAnsweredQuestions() + "/" + questionGenerator.GetAllQuestionsInt());
 
         Question question = questionGenerator.GetQuestion();
         questionTextView.setText(question.getQuestion());
@@ -62,14 +60,14 @@ public class QuizActivity extends AppCompatActivity {
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(answerTextView.getText().toString().equals(question.getAnswer())){
+                if (answerTextView.getText().toString().equals(question.getAnswer())) {
                     db.AddAnsweredQuestion(question, question.getAnswer());
                     results.IncrementCorrectlyAnsweredQuestions();
                 } else {
                     db.AddAnsweredQuestion(question, answerTextView.getText().toString());
                 }
 
-                if (results.GetAnsweredQuestions() >= questionGenerator.GetAllQuestionsInt()){
+                if (results.GetAnsweredQuestions() >= questionGenerator.GetAllQuestionsInt()) {
                     QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class));
                     return;
                 }
@@ -80,11 +78,15 @@ public class QuizActivity extends AppCompatActivity {
         });
     }
 
-    public static IResults GetResults(){
+    public static IResults GetResults() {
         return results;
     }
-    public static void ResetQuestions(){ questionGenerator = null;}
-    public static void ResetResults(){
+
+    public static void ResetQuestions() {
+        questionGenerator = null;
+    }
+
+    public static void ResetResults() {
         results = null;
     }
 }

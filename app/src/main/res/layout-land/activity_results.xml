@@ -8,13 +8,14 @@
 
     <TextView
         android:id="@+id/correctAnswersTextView"
-        android:layout_width="315dp"
-        android:layout_height="107dp"
-        android:layout_marginTop="48dp"
+        android:layout_width="664dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="4dp"
         android:gravity="center"
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,31 +23,31 @@
         android:id="@+id/allAnsweredQuestionsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="212dp"
+        android:layout_marginBottom="24dp"
         android:text="Резултати"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ListView
         android:id="@+id/helperListView"
-        android:layout_width="390dp"
-        android:layout_height="277dp"
+        android:layout_width="671dp"
+        android:layout_height="117dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/correctAnswersTextView"
-        app:layout_constraintVertical_bias="0.387" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/mainMenuButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="24dp"
         android:text="Меню"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/allAnsweredQuestionsButton"
-        app:layout_constraintHorizontal_bias="0.669"
+        app:layout_constraintHorizontal_bias="0.77"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

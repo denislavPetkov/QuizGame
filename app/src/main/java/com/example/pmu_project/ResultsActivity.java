@@ -15,11 +15,8 @@ import com.example.pmu_project.Entity.Question;
 import com.example.pmu_project.Exceptions.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.Service.Database;
-import com.example.pmu_project.IService.IResults;
 
-import java.io.Console;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class ResultsActivity extends AppCompatActivity {
@@ -37,13 +34,13 @@ public class ResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+        setTitle("Резултати");
 
         correctAnswersTextView = findViewById(R.id.correctAnswersTextView);
         helperListView = findViewById(R.id.helperListView);
 
         answeredQuestions = findViewById(R.id.allAnsweredQuestionsButton);
         mainMenuButton = findViewById(R.id.mainMenuButton);
-
 
         try {
             int allQuestionsAnswered = QuizActivity.GetResults().GetAnsweredQuestions();
@@ -64,7 +61,8 @@ public class ResultsActivity extends AppCompatActivity {
                     for (Map.Entry<Question, String> entry : questionsAndUserAnswers.entrySet()) {
                         questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue());
                     }
-                    ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,android.R.layout.simple_list_item_1,questionsAndAnswers);
+                    ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,
+                            android.R.layout.simple_list_item_1, questionsAndAnswers);
                     helperListView.setAdapter(adapter);
                 }
             });
@@ -86,11 +84,11 @@ public class ResultsActivity extends AppCompatActivity {
 
     }
 
-    private int GetCorrectlyAnsweredQuestions(Map<Question, String> questionsAndUserAnswers){
+    private int GetCorrectlyAnsweredQuestions(Map<Question, String> questionsAndUserAnswers) {
         int x = 0;
 
         for (Map.Entry<Question, String> entry : questionsAndUserAnswers.entrySet()) {
-            if (entry.getKey().getAnswer().equals(entry.getValue())){
+            if (entry.getKey().getAnswer().equals(entry.getValue())) {
                 x++;
             }
         }
