@@ -1,11 +1,8 @@
 package com.example.pmu_project.IService;
 
-import android.content.Context;
-
 import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.Exceptions.EmptyDatabaseException;
+import com.example.pmu_project.Exception.EmptyDatabaseException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 

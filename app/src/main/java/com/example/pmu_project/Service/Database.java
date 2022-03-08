@@ -7,9 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.Exceptions.EmptyDatabaseException;
+import com.example.pmu_project.Exception.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.IService.IResults;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.transform.Result;
 
 public class Database extends SQLiteOpenHelper implements IDatabase {
 

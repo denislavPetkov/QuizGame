@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pmu_project.Exceptions.EmptyDatabaseException;
+import com.example.pmu_project.Exception.EmptyDatabaseException;
 import com.example.pmu_project.IService.IDatabase;
 import com.example.pmu_project.Service.Database;
 

@@ -49,4 +49,13 @@
         app:layout_constraintEnd_toStartOf="@+id/allAnsweredQuestionsButton"
         app:layout_constraintHorizontal_bias="0.669"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/shareResultsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="144dp"
+        tools:layout_editor_absoluteY="603dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
