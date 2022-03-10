@@ -1,15 +1,8 @@
-package com.example.pmu_project.Service;
+package com.example.pmu_project.service.impl;
 
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.IService.IResults;
-import com.example.pmu_project.Entity.Question;
+import com.example.pmu_project.service.ResultsService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class Results implements IResults {
+public class ResultsServiceImpl implements ResultsService {
 
     private int correctlyAnsweredQuestionsInt = 0;
     private int answeredQuestions = 1;

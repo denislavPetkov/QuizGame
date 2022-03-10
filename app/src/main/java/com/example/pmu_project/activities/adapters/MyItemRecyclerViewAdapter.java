@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.activities.adapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 

@@ -1,26 +1,26 @@
-package com.example.pmu_project.Service;
+package com.example.pmu_project.service.impl;
 
 
 
-import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.Exception.EmptyDatabaseException;
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.IService.IQuestionGenerator;
+import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.exception.EmptyDatabaseException;
+import com.example.pmu_project.service.DatabaseService;
+import com.example.pmu_project.service.QuestionGeneratorService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class QuestionGenerator implements IQuestionGenerator {
+public class QuestionGeneratorServiceImpl implements QuestionGeneratorService {
 
     private  List<Question> questions = null;
     private  int numberOfQuestions = 0;
 
-    private  IDatabase db;
+    private DatabaseService db;
 
-    public QuestionGenerator() {}
+    public QuestionGeneratorServiceImpl() {}
 
-    public QuestionGenerator(IDatabase db) {
+    public QuestionGeneratorServiceImpl(DatabaseService db) {
         this.db = db;
         GenerateQuestions();
     }

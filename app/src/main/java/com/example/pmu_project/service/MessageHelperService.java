@@ -1,10 +1,10 @@
-package com.example.pmu_project.IService;
+package com.example.pmu_project.service;
 
 import android.os.Handler;
 
 import androidx.appcompat.app.AlertDialog;
 
-public interface IMessageHelper {
+public interface MessageHelperService {
     public static void showMessage(AlertDialog.Builder alertDialogBuilder, String ss, long delayMillis) {
         alertDialogBuilder.setMessage(ss);
         AlertDialog alertDialog = alertDialogBuilder.create();

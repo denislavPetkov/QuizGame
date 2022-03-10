@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,10 +14,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.Exception.EmptyDatabaseException;
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.Service.Database;
+import com.example.pmu_project.MainActivity;
+import com.example.pmu_project.R;
+import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.exception.EmptyDatabaseException;
+import com.example.pmu_project.service.DatabaseService;
+import com.example.pmu_project.service.impl.DatabaseServiceImpl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -37,7 +39,7 @@ public class ResultsActivity extends AppCompatActivity {
     private Button shareResultsButton;
 
     int correctlyAnsweredQuestions = 0;
-    private IDatabase db = new Database(this);
+    private DatabaseService db = new DatabaseServiceImpl(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
