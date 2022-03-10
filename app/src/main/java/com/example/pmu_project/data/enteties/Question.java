@@ -1,4 +1,4 @@
-package com.example.pmu_project.Entity;
+package com.example.pmu_project.data.enteties;
 
 public class Question {
     private String question;

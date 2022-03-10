@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,15 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.IService.IQuestionGenerator;
-import com.example.pmu_project.IService.IResults;
-import com.example.pmu_project.Service.Database;
-import com.example.pmu_project.Service.QuestionGenerator;
-import com.example.pmu_project.Service.Results;
-
-import java.io.IOException;
+import com.example.pmu_project.R;
+import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.service.DatabaseService;
+import com.example.pmu_project.service.QuestionGeneratorService;
+import com.example.pmu_project.service.ResultsService;
+import com.example.pmu_project.service.impl.DatabaseServiceImpl;
+import com.example.pmu_project.service.impl.QuestionGeneratorServiceImpl;
+import com.example.pmu_project.service.impl.ResultsServiceImpl;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -27,11 +26,11 @@ public class QuizActivity extends AppCompatActivity {
     private TextView answerTextView;
     private Button submitAnswerButton;
 
-    private final IDatabase db = new Database(this);
+    private final DatabaseService db = new DatabaseServiceImpl(this);
 
-    static private IQuestionGenerator questionGenerator = null;
+    static private QuestionGeneratorService questionGenerator = null;
 
-    static private IResults results = null;
+    static private ResultsService results = null;
 
     private AlertDialog.Builder alertDialogBuilder;
 
@@ -41,10 +40,10 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_question);
 
         if (questionGenerator == null) {
-            questionGenerator = new QuestionGenerator(db);
+            questionGenerator = new QuestionGeneratorServiceImpl(db);
         }
         if (results == null) {
-            results = new Results();
+            results = new ResultsServiceImpl();
         }
 
         setTitle("Въпрос " + results.GetAnsweredQuestions() + "/" + questionGenerator.GetAllQuestionsInt());
@@ -78,7 +77,7 @@ public class QuizActivity extends AppCompatActivity {
         });
     }
 
-    public static IResults GetResults() {
+    public static ResultsService GetResults() {
         return results;
     }
 

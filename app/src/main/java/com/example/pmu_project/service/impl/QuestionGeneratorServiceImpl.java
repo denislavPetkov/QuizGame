@@ -1,34 +1,26 @@
-package com.example.pmu_project.Service;
+package com.example.pmu_project.service.impl;
 
 
 
-import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.Exceptions.EmptyDatabaseException;
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.IService.IQuestionGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.exception.EmptyDatabaseException;
+import com.example.pmu_project.service.DatabaseService;
+import com.example.pmu_project.service.QuestionGeneratorService;
 
-import org.json.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class QuestionGenerator implements IQuestionGenerator {
+public class QuestionGeneratorServiceImpl implements QuestionGeneratorService {
 
     private  List<Question> questions = null;
     private  int numberOfQuestions = 0;
 
-    private  IDatabase db;
+    private DatabaseService db;
 
-    public QuestionGenerator() {}
+    public QuestionGeneratorServiceImpl() {}
 
-    public QuestionGenerator(IDatabase db) {
+    public QuestionGeneratorServiceImpl(DatabaseService db) {
         this.db = db;
         GenerateQuestions();
     }
@@ -42,7 +34,7 @@ public class QuestionGenerator implements IQuestionGenerator {
     private void loadFromDatabase(){
         int numberOfQuestionsInDatabase = db.GetAllQuestionsInt();
 
-        int desiredNumOfQuestions = 5;
+        int desiredNumOfQuestions = 3;
 
         int x;
 

@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.activities.adapters;
 
 import android.content.Context;
 
@@ -7,6 +7,10 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.example.pmu_project.R;
+import com.example.pmu_project.activities.fragments.HistoryFragment;
+import com.example.pmu_project.activities.fragments.MainMenuFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 

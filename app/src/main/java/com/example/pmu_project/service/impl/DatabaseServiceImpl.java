@@ -1,4 +1,4 @@
-package com.example.pmu_project.Service;
+package com.example.pmu_project.service.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,10 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.Exceptions.EmptyDatabaseException;
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.IService.IResults;
+import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.exception.EmptyDatabaseException;
+import com.example.pmu_project.service.DatabaseService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -21,9 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.Result;
-
-public class Database extends SQLiteOpenHelper implements IDatabase {
+public class DatabaseServiceImpl extends SQLiteOpenHelper implements DatabaseService {
 
     private static final String dataFileName = "data.yaml";
 
@@ -39,7 +36,7 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
     private static final String KEY_QUESTION_USER_ANSWER = "questionUserAnswer";
 
 
-    public Database(Context context) {
+    public DatabaseServiceImpl(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -115,11 +112,12 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
             throw new EmptyDatabaseException("Database is empty!");
         }
 
-        while (cursor.moveToPrevious()) {
-            previousResults.add(cursor.getString(1) + ": " +
-                            cursor.getString(2) + ",твоят отговор: " +
-                            cursor.getString(3) + "\n");
-        }
+       do{
+           previousResults.add(cursor.getString(1) + ": " +
+                   cursor.getString(2) + ",твоят отговор: " +
+                   cursor.getString(3) + "\n");
+       }while (cursor.moveToPrevious());
+
         return previousResults;
     }
 

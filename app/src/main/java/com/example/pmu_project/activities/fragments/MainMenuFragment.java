@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.activities.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.Service.Database;
+import com.example.pmu_project.MainActivity;
+import com.example.pmu_project.R;
+import com.example.pmu_project.activities.QuizActivity;
+import com.example.pmu_project.service.DatabaseService;
+import com.example.pmu_project.service.impl.DatabaseServiceImpl;
 
 public class MainMenuFragment extends Fragment {
 
@@ -43,7 +46,7 @@ public class MainMenuFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
 
-        IDatabase db = new Database(this.getContext());
+        DatabaseService db = new DatabaseServiceImpl(this.getContext());
 
         doQuizButton = view.findViewById(R.id.doQuizButton);
         deleteSavedResultsButton = view.findViewById(R.id.deleteSavedResultsButton);
@@ -67,4 +70,5 @@ public class MainMenuFragment extends Fragment {
 
         return view;
     }
+
 }

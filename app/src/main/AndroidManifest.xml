@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PMUProject">
         <activity
-            android:name=".QuizActivity"
+            android:name=".activities.QuizActivity"
             android:exported="false" />
         <activity
-            android:name=".ResultsActivity"
+            android:name=".activities.ResultsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -26,4 +26,5 @@
         </activity>
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

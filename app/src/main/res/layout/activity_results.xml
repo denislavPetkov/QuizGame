@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ResultsActivity">
+    tools:context=".activities.ResultsActivity">
 
     <TextView
         android:id="@+id/correctAnswersTextView"
@@ -17,16 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/allAnsweredQuestionsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="32dp"
-        android:text="Резултати"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <ListView
         android:id="@+id/helperListView"
@@ -43,10 +33,21 @@
         android:id="@+id/mainMenuButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="40dp"
         android:text="Меню"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/allAnsweredQuestionsButton"
-        app:layout_constraintHorizontal_bias="0.669"
+        app:layout_constraintEnd_toStartOf="@+id/shareResultsButton"
+        app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/shareResultsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="36dp"
+        android:text="Сподели\nРезултати"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

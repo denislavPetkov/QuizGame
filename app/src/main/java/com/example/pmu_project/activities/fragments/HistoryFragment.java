@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.activities.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.pmu_project.Exceptions.EmptyDatabaseException;
-import com.example.pmu_project.IService.IDatabase;
-import com.example.pmu_project.Service.Database;
+import com.example.pmu_project.activities.adapters.MyItemRecyclerViewAdapter;
+import com.example.pmu_project.R;
+import com.example.pmu_project.exception.EmptyDatabaseException;
+import com.example.pmu_project.service.DatabaseService;
+import com.example.pmu_project.service.impl.DatabaseServiceImpl;
 
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class HistoryFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            IDatabase db = new Database(this.getContext());
+            DatabaseService db = new DatabaseServiceImpl(this.getContext());
 
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));

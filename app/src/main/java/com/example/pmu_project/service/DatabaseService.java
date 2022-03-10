@@ -1,15 +1,12 @@
-package com.example.pmu_project.IService;
+package com.example.pmu_project.service;
 
-import android.content.Context;
+import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.exception.EmptyDatabaseException;
 
-import com.example.pmu_project.Entity.Question;
-import com.example.pmu_project.Exceptions.EmptyDatabaseException;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public interface IDatabase {
+public interface DatabaseService {
     public void LoadDataFromFile ();
     public List<String> GetResultsRecordsString() throws EmptyDatabaseException;
     public void DeleteSavedResults();
