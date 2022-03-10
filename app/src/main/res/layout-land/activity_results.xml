@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ResultsActivity">
-
     <TextView
         android:id="@+id/correctAnswersTextView"
         android:layout_width="664dp"
@@ -20,19 +19,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/allAnsweredQuestionsButton"
+        android:id="@+id/shareResultsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="212dp"
         android:layout_marginBottom="24dp"
-        android:text="Резултати"
+        android:text="Сподели\nРезултати"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ListView
         android:id="@+id/helperListView"
-        android:layout_width="671dp"
-        android:layout_height="117dp"
+        android:layout_width="677dp"
+        android:layout_height="180dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -47,7 +46,8 @@
         android:layout_marginBottom="24dp"
         android:text="Меню"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/allAnsweredQuestionsButton"
+        app:layout_constraintEnd_toStartOf="@+id/shareResultsButton"
         app:layout_constraintHorizontal_bias="0.77"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

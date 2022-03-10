@@ -34,7 +34,6 @@ public class ResultsActivity extends AppCompatActivity {
 
     private ListView helperListView;
 
-    private Button answeredQuestions;
     private Button mainMenuButton;
     private Button shareResultsButton;
 
@@ -48,9 +47,9 @@ public class ResultsActivity extends AppCompatActivity {
         setTitle("Резултати");
 
         correctAnswersTextView = findViewById(R.id.correctAnswersTextView);
+        
         helperListView = findViewById(R.id.helperListView);
 
-        answeredQuestions = findViewById(R.id.allAnsweredQuestionsButton);
         mainMenuButton = findViewById(R.id.mainMenuButton);
         shareResultsButton = findViewById(R.id.shareResultsButton);
 
@@ -66,19 +65,15 @@ public class ResultsActivity extends AppCompatActivity {
                     correctlyAnsweredQuestions + "  от " +
                     allQuestionsAnswered + " въпроса"));
 
-            answeredQuestions.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> questionsAndAnswers = new ArrayList<String>();
+            ArrayList<String> questionsAndAnswers = new ArrayList<String>();
 
-                    for (Map.Entry<Question, String> entry : questionsAndUserAnswers.entrySet()) {
-                        questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue());
-                    }
-                    ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,
-                            android.R.layout.simple_list_item_1, questionsAndAnswers);
-                    helperListView.setAdapter(adapter);
-                }
-            });
+            for (Map.Entry<Question, String> entry : questionsAndUserAnswers.entrySet()) {
+                questionsAndAnswers.add(entry.getKey().toString() + ". Твоят отговор: " + entry.getValue());
+            }
+            ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,
+                    android.R.layout.simple_list_item_1, questionsAndAnswers);
+            helperListView.setAdapter(adapter);
+
 
         } catch (EmptyDatabaseException e) {
             Toast toast = Toast.makeText(this, "Грешка при записването на резултатите!", Toast.LENGTH_SHORT);
