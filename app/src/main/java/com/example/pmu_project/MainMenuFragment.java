@@ -67,4 +67,5 @@ public class MainMenuFragment extends Fragment {
 
         return view;
     }
+
 }

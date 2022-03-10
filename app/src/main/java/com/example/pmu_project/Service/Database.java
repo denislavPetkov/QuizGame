@@ -112,11 +112,12 @@ public class Database extends SQLiteOpenHelper implements IDatabase {
             throw new EmptyDatabaseException("Database is empty!");
         }
 
-        while (cursor.moveToPrevious()) {
-            previousResults.add(cursor.getString(1) + ": " +
-                            cursor.getString(2) + ",твоят отговор: " +
-                            cursor.getString(3) + "\n");
-        }
+       do{
+           previousResults.add(cursor.getString(1) + ": " +
+                   cursor.getString(2) + ",твоят отговор: " +
+                   cursor.getString(3) + "\n");
+       }while (cursor.moveToPrevious());
+
         return previousResults;
     }
 
