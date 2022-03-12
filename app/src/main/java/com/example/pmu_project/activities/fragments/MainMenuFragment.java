@@ -1,25 +1,35 @@
 package com.example.pmu_project.activities.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.pmu_project.MainActivity;
 import com.example.pmu_project.R;
 import com.example.pmu_project.activities.QuizActivity;
-import com.example.pmu_project.service.DatabaseService;
-import com.example.pmu_project.service.impl.DatabaseServiceImpl;
+import com.example.pmu_project.activities.ResultsActivity;
+import com.example.pmu_project.activities.adapters.MyItemRecyclerViewAdapter;
+import com.example.pmu_project.exception.EmptyDatabaseException;
+import com.example.pmu_project.service.CurrentSessionRepositoryService;
+import com.example.pmu_project.service.impl.RepositoryServiceImpl;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 public class MainMenuFragment extends Fragment {
 
-    Button doQuizButton;
-    Button deleteSavedResultsButton;
+    private Button doQuizButton;
+    private Button deleteSavedResultsButton;
+    private Button continueCurrentSessionButton;
 
     public MainMenuFragment() {
         // Required empty public constructor
@@ -46,14 +56,21 @@ public class MainMenuFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
 
-        DatabaseService db = new DatabaseServiceImpl(this.getContext());
+        CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(this.getContext());
 
         doQuizButton = view.findViewById(R.id.doQuizButton);
         deleteSavedResultsButton = view.findViewById(R.id.deleteSavedResultsButton);
+        continueCurrentSessionButton = view.findViewById(R.id.continueCurrentSessionButton);
+
+        if (!currentSessionRepository.SavedSession()){
+            continueCurrentSessionButton.setBackgroundColor(Color.parseColor("#808080"));
+            continueCurrentSessionButton.setEnabled(false);
+        }
 
         doQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                currentSessionRepository.DeleteSavedResults();
                 MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class));
                 return;
             }
@@ -62,9 +79,37 @@ public class MainMenuFragment extends Fragment {
         deleteSavedResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.DeleteSavedResults();
-                MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), MainActivity.class));
+                currentSessionRepository.DeleteSavedResults();
+
+                RecyclerView recyclerView = HistoryFragment.GetRecyclerView();
+
+                try {
+                    List<String> previousResults = currentSessionRepository.GetResultsRecordsString();
+                    recyclerView.setAdapter(new MyItemRecyclerViewAdapter(previousResults));
+
+                } catch (EmptyDatabaseException e) {
+                    recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Collections.emptyList()));
+                    // history cleared msg
+                }
+
+                continueCurrentSessionButton.setBackgroundColor(Color.parseColor("#808080"));
+                continueCurrentSessionButton.setClickable(false);
+
                 return;
+            }
+        });
+
+        continueCurrentSessionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class).putExtra(QuizActivity.currentSessionDataExtra,
+                            (Serializable) currentSessionRepository.GetQuestionsAndAnswers()));
+                } catch (EmptyDatabaseException e) {
+                    e.printStackTrace();
+                }
+                // open quiz with extra
+                // in quiz check for extra for info like currentQuestion and left queistions to answer
             }
         });
 

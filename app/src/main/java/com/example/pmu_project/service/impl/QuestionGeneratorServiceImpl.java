@@ -4,7 +4,7 @@ package com.example.pmu_project.service.impl;
 
 import com.example.pmu_project.data.enteties.Question;
 import com.example.pmu_project.exception.EmptyDatabaseException;
-import com.example.pmu_project.service.DatabaseService;
+import com.example.pmu_project.service.QuestionRepositoryService;
 import com.example.pmu_project.service.QuestionGeneratorService;
 
 import java.util.ArrayList;
@@ -16,11 +16,11 @@ public class QuestionGeneratorServiceImpl implements QuestionGeneratorService {
     private  List<Question> questions = null;
     private  int numberOfQuestions = 0;
 
-    private DatabaseService db;
+    private QuestionRepositoryService db;
 
     public QuestionGeneratorServiceImpl() {}
 
-    public QuestionGeneratorServiceImpl(DatabaseService db) {
+    public QuestionGeneratorServiceImpl(QuestionRepositoryService db) {
         this.db = db;
         GenerateQuestions();
     }

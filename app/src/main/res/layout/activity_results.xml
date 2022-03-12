@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_gradient"
     tools:context=".activities.ResultsActivity">
 
     <TextView
@@ -35,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:text="Меню"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/shareResultsButton"
         app:layout_constraintHorizontal_bias="0.621"
@@ -47,6 +49,7 @@
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="36dp"
         android:text="Сподели\nРезултати"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
