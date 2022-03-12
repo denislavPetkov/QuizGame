@@ -56,13 +56,13 @@ public class MainMenuFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
 
-        CurrentSessionRepositoryService db = new RepositoryServiceImpl(this.getContext());
+        CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(this.getContext());
 
         doQuizButton = view.findViewById(R.id.doQuizButton);
         deleteSavedResultsButton = view.findViewById(R.id.deleteSavedResultsButton);
         continueCurrentSessionButton = view.findViewById(R.id.continueCurrentSessionButton);
 
-        if (!db.SavedSession() ){
+        if (!currentSessionRepository.SavedSession()){
             continueCurrentSessionButton.setBackgroundColor(Color.parseColor("#808080"));
             continueCurrentSessionButton.setEnabled(false);
         }
@@ -70,7 +70,7 @@ public class MainMenuFragment extends Fragment {
         doQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.DeleteSavedResults();
+                currentSessionRepository.DeleteSavedResults();
                 MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class));
                 return;
             }
@@ -79,12 +79,12 @@ public class MainMenuFragment extends Fragment {
         deleteSavedResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.DeleteSavedResults();
+                currentSessionRepository.DeleteSavedResults();
 
                 RecyclerView recyclerView = HistoryFragment.GetRecyclerView();
 
                 try {
-                    List<String> previousResults = db.GetResultsRecordsString();
+                    List<String> previousResults = currentSessionRepository.GetResultsRecordsString();
                     recyclerView.setAdapter(new MyItemRecyclerViewAdapter(previousResults));
 
                 } catch (EmptyDatabaseException e) {
@@ -104,7 +104,7 @@ public class MainMenuFragment extends Fragment {
             public void onClick(View view) {
                 try {
                     MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class).putExtra(QuizActivity.currentSessionDataExtra,
-                            (Serializable) db.GetQuestionsAndAnswers()));
+                            (Serializable) currentSessionRepository.GetQuestionsAndAnswers()));
                 } catch (EmptyDatabaseException e) {
                     e.printStackTrace();
                 }

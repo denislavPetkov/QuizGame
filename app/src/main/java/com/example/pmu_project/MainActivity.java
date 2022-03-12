@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-    private final GeneralRepositoryService db = new RepositoryServiceImpl(this);
+    private final GeneralRepositoryService generalRepository = new RepositoryServiceImpl(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        db.LoadDataFromFile();
+        generalRepository.LoadDataFromFile();
     }
 
 

@@ -28,7 +28,6 @@ public class HistoryFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    private CurrentSessionRepositoryService db;
     private static RecyclerView recyclerView;
 
     public HistoryFragment() {
@@ -59,7 +58,7 @@ public class HistoryFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
-            db = new RepositoryServiceImpl(this.getContext());
+            CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(this.getContext());
 
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -67,7 +66,7 @@ public class HistoryFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             try {
-                List<String> previousResults = db.GetResultsRecordsString();
+                List<String> previousResults = currentSessionRepository.GetResultsRecordsString();
                 recyclerView.setAdapter(new MyItemRecyclerViewAdapter(previousResults));
 
             } catch (EmptyDatabaseException e) {

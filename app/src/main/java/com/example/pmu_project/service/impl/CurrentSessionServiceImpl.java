@@ -19,7 +19,4 @@ public class CurrentSessionServiceImpl implements CurrentSessionService {
     public HashMap<Question, String> GetAnsweredQuestions(){
         return questionsAndAnswers;
     }
-    public int GetAnsweredQuestionsInt(){
-        return questionsAndAnswers.size();
-    }
 }

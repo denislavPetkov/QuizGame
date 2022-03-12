@@ -30,21 +30,14 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     private static final String DATABASE_NAME = "QUIZ_GAME";
 
-    private static final String TABLE_NAME_RESULTS = "PREVIOUS_SCORES";
+    private static final String TABLE_NAME_CURRENT_SESSION = "CURRENT_SESSION";
     private static final String TABLE_NAME_QUESTIONS = "ALL_QUESTIONS";
-//    private static final String TABLE_NAME_PREVIOUS_SESSION = "PREVIOUS_SESSION";
 
     private static final String KEY_ID = "id";
 
     private static final String KEY_QUESTION = "question";
     private static final String KEY_QUESTION_ANSWER = "questionAnswer";
     private static final String KEY_QUESTION_USER_ANSWER = "questionUserAnswer";
-//    private static final String KEY_QUESTION_USER_ANSWER = "questionUserAnswer";
-
-
-    private static final String KEY_LAST_SESSION_CURRENT_QUESTION = "currentQuestion";
-    private static final String KEY_LAST_SESSION_ALL_QUESTIONS = "allQuestions";
-//    private static final String KEY_LAST_SESSION_CURRENT_QUESTION = "currentQuestion";
 
 
     public RepositoryServiceImpl(Context context) {
@@ -53,7 +46,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_RESULTS
+        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_CURRENT_SESSION
                 + "("
                 + KEY_ID                    + " INTEGER PRIMARY KEY,"
                 + KEY_QUESTION              + " TEXT NOT NULL UNIQUE,"
@@ -74,7 +67,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int
             newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_RESULTS + "'");
+        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_CURRENT_SESSION + "'");
         db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_QUESTIONS + "'");
         onCreate(db);
     }
@@ -94,10 +87,10 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     }
 
-    private boolean isQuestionAlreadyAnswered(String name){ //
+    private boolean isQuestionAlreadyInserted(String name){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
-                TABLE_NAME_RESULTS,
+                TABLE_NAME_CURRENT_SESSION,
                 new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
                 KEY_QUESTION + "=?",
                 new String[] {name},
@@ -116,11 +109,11 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
             values.put(KEY_QUESTION, entry.getKey().getQuestion());
             values.put(KEY_QUESTION_ANSWER, entry.getKey().getAnswer());
             values.put(KEY_QUESTION_USER_ANSWER, entry.getValue());
-            if (isQuestionAlreadyAnswered(entry.getKey().getQuestion())){
-                db.update(TABLE_NAME_RESULTS, values, KEY_QUESTION + "= ?", new String[]{ entry.getKey().getQuestion()});
+            if (isQuestionAlreadyInserted(entry.getKey().getQuestion())){
+                db.update(TABLE_NAME_CURRENT_SESSION, values, KEY_QUESTION + "= ?", new String[]{ entry.getKey().getQuestion()});
                 continue;
             }
-            db.insert(TABLE_NAME_RESULTS, null, values);
+            db.insert(TABLE_NAME_CURRENT_SESSION, null, values);
         }
 
 
@@ -130,7 +123,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
     public boolean SavedSession(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
-                TABLE_NAME_RESULTS,
+                TABLE_NAME_CURRENT_SESSION,
                 new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
                 KEY_QUESTION_USER_ANSWER + " IS NULL",
                 null,
@@ -144,7 +137,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
     public int GetAnsweredQuestionsInt() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
-                TABLE_NAME_RESULTS,
+                TABLE_NAME_CURRENT_SESSION,
                 new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
                 KEY_QUESTION_USER_ANSWER + " IS NOT NULL",
                 null,
@@ -158,7 +151,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     public int GetCorrectlyAnsweredQuestionsInt() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_RESULTS + " WHERE " + KEY_QUESTION_ANSWER + "=" + KEY_QUESTION_USER_ANSWER,
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_CURRENT_SESSION + " WHERE " + KEY_QUESTION_ANSWER + "=" + KEY_QUESTION_USER_ANSWER,
                                         new String[]{});
 
 
@@ -168,9 +161,9 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
     public List<String> GetResultsRecordsString() throws EmptyDatabaseException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
-                TABLE_NAME_RESULTS,
+                TABLE_NAME_CURRENT_SESSION,
                 new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
-//                KEY_QUESTION_USER_ANSWER + " IS NOT NULL",
+                KEY_QUESTION_USER_ANSWER + " IS NOT NULL",
                 null,
                 null, null, null,
                 null
@@ -193,7 +186,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     public void DeleteSavedResults() {
         SQLiteDatabase db = this.getWritableDatabase();
-        int rowsDeleted = db.delete(TABLE_NAME_RESULTS,null,null);
+        int rowsDeleted = db.delete(TABLE_NAME_CURRENT_SESSION,null,null);
         db.close();
 //        return rowsDeleted;
     }
@@ -201,7 +194,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
     public HashMap<Question, String> GetQuestionsAndAnswers() throws EmptyDatabaseException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
-                TABLE_NAME_RESULTS,
+                TABLE_NAME_CURRENT_SESSION,
                 new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
                 null,
                 null,

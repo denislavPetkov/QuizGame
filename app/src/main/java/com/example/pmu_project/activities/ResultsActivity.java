@@ -35,9 +35,9 @@ public class ResultsActivity extends AppCompatActivity {
 
     private int correctlyAnsweredQuestions = 0;
 
-    private CurrentSessionRepositoryService db = new RepositoryServiceImpl(this);
+    private CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(this);
 
-    private HashMap<Question, String> currentSession;
+    private HashMap<Question, String> currentSessionQuestionsAndAnswers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,24 +74,24 @@ public class ResultsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null)
         {
-            currentSession =(HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
-            db.AddAnsweredQuestions(currentSession);
+            currentSessionQuestionsAndAnswers =(HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
+            currentSessionRepository.AddAnsweredQuestions(currentSessionQuestionsAndAnswers);
         }
     }
 
     private void handleResults(){
         try {
-            int allQuestionsAnswered = db.GetAnsweredQuestionsInt();
-            correctlyAnsweredQuestions = db.GetCorrectlyAnsweredQuestionsInt();
+            int allQuestionsAnswered = currentSessionRepository.GetAnsweredQuestionsInt();
+            correctlyAnsweredQuestions = currentSessionRepository.GetCorrectlyAnsweredQuestionsInt();
 
             correctAnswersTextView.setText(String.valueOf("Правилно отговорени " +
                     correctlyAnsweredQuestions + "  от " +
                     allQuestionsAnswered + " въпроса"));
 
             ArrayAdapter adapter = new ArrayAdapter<String>(ResultsActivity.this,
-                    android.R.layout.simple_list_item_1, db.GetResultsRecordsString());
-            helperListView.setAdapter(adapter);
+                    android.R.layout.simple_list_item_1, currentSessionRepository.GetResultsRecordsString());
 
+            helperListView.setAdapter(adapter);
 
         } catch (EmptyDatabaseException e) {
             Toast toast = Toast.makeText(this, "Грешка при записването на резултатите!", Toast.LENGTH_SHORT);

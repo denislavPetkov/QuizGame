@@ -34,7 +34,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button submitAnswerButton;
     private Button saveResultsGoToMenuButton;
 
-    private final QuestionRepositoryService db = new RepositoryServiceImpl(this);
+    private final QuestionRepositoryService questionRepository = new RepositoryServiceImpl(this);
 
     private QuestionGeneratorService questionGenerator = null;
     private Question question;
@@ -56,26 +56,28 @@ public class QuizActivity extends AppCompatActivity {
         saveResultsGoToMenuButton = findViewById(R.id.saveResultsGoToMenuButton);
 
         Intent intent = getIntent();
-        if (lastSession == null){
-            lastSession = (HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
-        }
-        if (lastSession != null) {
-            allQuestions = lastSession.size();
-            CurrentSessionRepositoryService db = new RepositoryServiceImpl(this);
-            currentQuestion = db.GetAnsweredQuestionsInt();
+        lastSession = (HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
+
+        if(lastSession == null){
+            handleNewQuiz();
+        } else {
+            handleLastSession();
         }
 
-        questionGenerator = new QuestionGeneratorServiceImpl(db);
+    }
+
+    private void handleLastSession() {
+        allQuestions = lastSession.size();
+        CurrentSessionRepositoryService db = new RepositoryServiceImpl(this);
+        currentQuestion = db.GetAnsweredQuestionsInt();
         currentSession = new CurrentSessionServiceImpl();
-
         generateQuestion();
         updateTitle();
-
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentSession.AddAnsweredQuestion(question,  answerTextView.getText().toString());
-                if (currentQuestion == questionGenerator.GetAllQuestionsInt()) {
+                if (currentQuestion == allQuestions) {
                     QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class).putExtra(currentSessionDataExtra,
                             (Serializable) currentSession.GetAnsweredQuestions()));
                     return;
@@ -86,22 +88,46 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
         });
-
         saveResultsGoToMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentSession.AddAnsweredQuestion(question, null);
+                db.AddAnsweredQuestions(currentSession.GetAnsweredQuestions());
+                QuizActivity.this.startActivity(new Intent(QuizActivity.this, MainActivity.class));
+                return;
+            }
+        });
+    }
 
-                if (lastSession == null){
+    private void handleNewQuiz() {
+        questionGenerator = new QuestionGeneratorServiceImpl(questionRepository);
+        currentSession = new CurrentSessionServiceImpl();
+        generateQuestion();
+        updateTitle();
+        submitAnswerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentSession.AddAnsweredQuestion(question,  answerTextView.getText().toString());
+                if (currentQuestion == allQuestions) {
+                    QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class).putExtra(currentSessionDataExtra,
+                            (Serializable) currentSession.GetAnsweredQuestions()));
+                    return;
+                }
+                generateQuestion();
+                answerTextView.setText("");
+                updateTitle();
+                return;
+            }
+        });
+        saveResultsGoToMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentSession.AddAnsweredQuestion(question, null);
                     for (int i = currentQuestion; i < allQuestions; i++){
                         currentSession.AddAnsweredQuestion( questionGenerator.GetQuestion(), null);
                     }
-                }
-
-
-                CurrentSessionRepositoryService db = new RepositoryServiceImpl(QuizActivity.this);
-                db.AddAnsweredQuestions(currentSession.GetAnsweredQuestions());
-
+                CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(QuizActivity.this);
+                currentSessionRepository.AddAnsweredQuestions(currentSession.GetAnsweredQuestions());
                 QuizActivity.this.startActivity(new Intent(QuizActivity.this, MainActivity.class));
                 return;
             }
@@ -109,13 +135,13 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void updateTitle(){
-        currentQuestion++;
         setTitle("Въпрос " + currentQuestion + "/" + allQuestions);
     }
 
     private void generateQuestion() {
+        currentQuestion++;
         if (lastSession != null){
-            generateQuestionFromCurrentSession(lastSession);
+            generateQuestionFromLastSessionSession(lastSession);
             return;
         }
         allQuestions = questionGenerator.GetAllQuestionsInt();
@@ -123,7 +149,7 @@ public class QuizActivity extends AppCompatActivity {
         questionTextView.setText(question.getQuestion());
     }
 
-    private void generateQuestionFromCurrentSession(HashMap<Question, String> lastSession){
+    private void generateQuestionFromLastSessionSession(HashMap<Question, String> lastSession){
 
         for (Map.Entry<Question, String> entry : lastSession.entrySet()) {
                 if (entry.getValue() == null){
@@ -133,17 +159,6 @@ public class QuizActivity extends AppCompatActivity {
                     break;
                 }
         }
-
-    }
-
-    private int getAllAnsweredQuestions(){
-        int x = 0;
-        for (Map.Entry<Question, String> entry : lastSession.entrySet()) {
-            if (entry.getValue() != null){
-                x++;
-            }
-        }
-        return x;
     }
 
 }
