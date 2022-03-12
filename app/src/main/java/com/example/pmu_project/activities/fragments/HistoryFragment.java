@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import com.example.pmu_project.activities.adapters.MyItemRecyclerViewAdapter;
 import com.example.pmu_project.R;
 import com.example.pmu_project.exception.EmptyDatabaseException;
-import com.example.pmu_project.service.DatabaseService;
-import com.example.pmu_project.service.impl.DatabaseServiceImpl;
+import com.example.pmu_project.service.CurrentSessionRepositoryService;
+import com.example.pmu_project.service.impl.RepositoryServiceImpl;
 
 import java.util.List;
 
@@ -27,6 +27,9 @@ public class HistoryFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+
+    private CurrentSessionRepositoryService db;
+    private static RecyclerView recyclerView;
 
     public HistoryFragment() {
     }
@@ -55,8 +58,8 @@ public class HistoryFragment extends Fragment {
 
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            DatabaseService db = new DatabaseServiceImpl(this.getContext());
+            recyclerView = (RecyclerView) view;
+            db = new RepositoryServiceImpl(this.getContext());
 
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -73,4 +76,9 @@ public class HistoryFragment extends Fragment {
         }
         return view;
     }
+
+    public static RecyclerView GetRecyclerView(){
+        return recyclerView;
+    }
+
 }

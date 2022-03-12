@@ -13,6 +13,7 @@
         android:layout_height="49dp"
         android:layout_marginBottom="196dp"
         android:text="изчисти историята"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -23,7 +24,19 @@
         android:layout_height="49dp"
         android:layout_marginBottom="28dp"
         android:text="ИГРАй"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/deleteSavedResultsButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/continueCurrentSessionButton"
+        android:layout_width="331dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="28dp"
+        android:text="Продължи"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/doQuizButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
