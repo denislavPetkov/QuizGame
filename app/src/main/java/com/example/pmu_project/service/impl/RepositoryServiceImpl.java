@@ -154,7 +154,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_CURRENT_SESSION + " INNER JOIN " +
                 TABLE_NAME_QUESTIONS + " ON " + TABLE_NAME_QUESTIONS + "." + KEY_ID +
                 " = " + TABLE_NAME_CURRENT_SESSION + "." + KEY_QUESTION_ID + " WHERE " +
-                TABLE_NAME_QUESTIONS + "." + KEY_QUESTION + "=" + TABLE_NAME_CURRENT_SESSION + "." + KEY_QUESTION_USER_ANSWER,
+                TABLE_NAME_QUESTIONS + "." + KEY_QUESTION_ANSWER + "=" + TABLE_NAME_CURRENT_SESSION + "." + KEY_QUESTION_USER_ANSWER,
                 new String[]{});
 
 
@@ -182,7 +182,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
            Question question = GetQuestion(Integer.parseInt(cursor.getString(1)));
            previousResults.add(
                    question.getQuestion() + "\nотговор: " +
-                   question.getAnswer() + "\nтвоят отговор: " +
+                   question.getAnswer() + "\nдаден отговор: " +
                    cursor.getString(2) + "\n"
            );
        }while (cursor.moveToPrevious());
