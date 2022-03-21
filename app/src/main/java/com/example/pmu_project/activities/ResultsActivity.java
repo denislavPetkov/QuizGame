@@ -102,7 +102,9 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     private void startTwitter(Context context, int correctlyAnsweredQuestions) {
-        final String message = "https://twitter.com/compose/tweet?text=Hey i managed to answer " + correctlyAnsweredQuestions + " questions.\nTry to see how you can do!";
+        final String message = "https://twitter.com/compose/tweet?text=Здравейте!" +
+                "Успях да отговоря на " + correctlyAnsweredQuestions + " въпроса в играта \"Литературен куиз\"." +
+                "\nОпитайте се да отговорите на повече въпроси от мен!";
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(message));
         try {
