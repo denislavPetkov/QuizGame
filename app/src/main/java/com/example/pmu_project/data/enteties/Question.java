@@ -1,6 +1,8 @@
 package com.example.pmu_project.data.enteties;
 
-public class Question {
+import java.io.Serializable;
+
+public class Question implements Serializable {
     private String question;
     private String answer;
 
@@ -20,7 +22,7 @@ public class Question {
 
     @Override
     public String toString() {
-        return this.question + ", отговор: " + this.answer;
+        return this.question + "\nотговор: " + this.answer;
     }
 
 }
