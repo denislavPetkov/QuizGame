@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Quiz</string>
+    <string name="app_name">Литературен куиз</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="tab_text_1">Основно меню</string>
     <string name="tab_text_2">История</string>
