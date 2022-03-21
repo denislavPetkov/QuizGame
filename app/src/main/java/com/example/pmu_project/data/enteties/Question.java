@@ -22,7 +22,7 @@ public class Question implements Serializable {
 
     @Override
     public String toString() {
-        return this.question + ", отговор: " + this.answer;
+        return this.question + "\nотговор: " + this.answer;
     }
 
 }

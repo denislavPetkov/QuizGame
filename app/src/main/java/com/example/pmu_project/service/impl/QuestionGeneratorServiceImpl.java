@@ -34,7 +34,7 @@ public class QuestionGeneratorServiceImpl implements QuestionGeneratorService {
     private void loadFromDatabase(){
         int numberOfQuestionsInDatabase = db.GetAllQuestionsInt();
 
-        int desiredNumOfQuestions = 3;
+        int desiredNumOfQuestions = 5;
 
         int x;
 

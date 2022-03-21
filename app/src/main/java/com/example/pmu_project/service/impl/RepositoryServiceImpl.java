@@ -176,8 +176,8 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         }
 
        do{
-           previousResults.add(cursor.getString(1) + ", отговор: " +
-                   cursor.getString(2) + ",твоят отговор: " +
+           previousResults.add(cursor.getString(1) + "\nотговор: " +
+                   cursor.getString(2) + "\nтвоят отговор: " +
                    cursor.getString(3) + "\n");
        }while (cursor.moveToPrevious());
 

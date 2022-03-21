@@ -21,8 +21,10 @@ import com.example.pmu_project.service.impl.QuestionGeneratorServiceImpl;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.*;
+import org.apache.commons.text.WordUtils;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -76,7 +78,7 @@ public class QuizActivity extends AppCompatActivity {
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentSession.AddAnsweredQuestion(question,  answerTextView.getText().toString());
+                currentSession.AddAnsweredQuestion(question,  WordUtils.capitalize(answerTextView.getText().toString()));
                 if (currentQuestion == allQuestions) {
                     QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class).putExtra(currentSessionDataExtra,
                             (Serializable) currentSession.GetAnsweredQuestions()));
@@ -107,7 +109,7 @@ public class QuizActivity extends AppCompatActivity {
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentSession.AddAnsweredQuestion(question,  answerTextView.getText().toString());
+                currentSession.AddAnsweredQuestion(question,  WordUtils.capitalize(answerTextView.getText().toString()));
                 if (currentQuestion == allQuestions) {
                     QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class).putExtra(currentSessionDataExtra,
                             (Serializable) currentSession.GetAnsweredQuestions()));

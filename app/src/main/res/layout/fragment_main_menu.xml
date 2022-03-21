@@ -9,10 +9,10 @@
 
     <Button
         android:id="@+id/deleteSavedResultsButton"
-        android:layout_width="331dp"
-        android:layout_height="49dp"
+        android:layout_width="328dp"
+        android:layout_height="56dp"
         android:layout_marginBottom="196dp"
-        android:text="изчисти историята"
+        android:text="изчисти историята/текущата сесия"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
         android:layout_width="331dp"
         android:layout_height="49dp"
         android:layout_marginBottom="28dp"
-        android:text="ИГРАй"
+        android:text="Нова Игра"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/deleteSavedResultsButton"
         app:layout_constraintEnd_toEndOf="parent"
