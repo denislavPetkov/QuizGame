@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import com.example.pmu_project.MainActivity;
 import com.example.pmu_project.R;
+import com.example.pmu_project.activities.fragments.MainMenuFragment;
 import com.example.pmu_project.data.enteties.Question;
 import com.example.pmu_project.service.CurrentSessionRepositoryService;
 import com.example.pmu_project.service.CurrentSessionService;
+import com.example.pmu_project.service.MessageHelperService;
 import com.example.pmu_project.service.QuestionRepositoryService;
 import com.example.pmu_project.service.QuestionGeneratorService;
 import com.example.pmu_project.service.impl.CurrentSessionServiceImpl;
@@ -29,6 +31,7 @@ import org.apache.commons.text.WordUtils;
 public class QuizActivity extends AppCompatActivity {
 
     public final static String currentSessionDataExtra = "currentSession";
+    public final static String numberOfQuestions = "numberOfQuestions";
 
     private TextView questionTextView;
     private TextView answerTextView;
@@ -45,7 +48,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private int currentQuestion=0;
     private int allQuestions=0;
-
+    private int numberOfQuestionsInt=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +62,14 @@ public class QuizActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         lastSession = (HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
+        Serializable questions = intent.getSerializableExtra(QuizActivity.numberOfQuestions);
+
+        if (questions != null){
+            numberOfQuestionsInt = (Integer) intent.getSerializableExtra(QuizActivity.numberOfQuestions);
+        }
 
         if(lastSession == null){
-            handleNewQuiz();
+            handleNewQuiz(numberOfQuestionsInt);
         } else {
             handleLastSession();
         }
@@ -101,8 +109,8 @@ public class QuizActivity extends AppCompatActivity {
         });
     }
 
-    private void handleNewQuiz() {
-        questionGenerator = new QuestionGeneratorServiceImpl(questionRepository);
+    private void handleNewQuiz(int questions) {
+        questionGenerator = new QuestionGeneratorServiceImpl(questionRepository,questions);
         currentSession = new CurrentSessionServiceImpl();
         generateQuestion();
         updateTitle();
@@ -131,6 +139,7 @@ public class QuizActivity extends AppCompatActivity {
                 CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(QuizActivity.this);
                 currentSessionRepository.AddAnsweredQuestions(currentSession.GetAnsweredQuestions());
                 QuizActivity.this.startActivity(new Intent(QuizActivity.this, MainActivity.class));
+                MessageHelperService.ShowMessage(QuizActivity.this,"Сесията е запазена успешно!");
                 return;
             }
         });

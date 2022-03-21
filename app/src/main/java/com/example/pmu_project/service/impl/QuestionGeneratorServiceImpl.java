@@ -20,21 +20,19 @@ public class QuestionGeneratorServiceImpl implements QuestionGeneratorService {
 
     public QuestionGeneratorServiceImpl() {}
 
-    public QuestionGeneratorServiceImpl(QuestionRepositoryService db) {
+    public QuestionGeneratorServiceImpl(QuestionRepositoryService db, int desiredNumOfQuestions) {
         this.db = db;
-        GenerateQuestions();
+        GenerateQuestions(desiredNumOfQuestions);
     }
 
-    private void GenerateQuestions(){
+    private void GenerateQuestions(int desiredNumOfQuestions){
             questions = new ArrayList<Question>();
-            loadFromDatabase();
+            loadFromDatabase(desiredNumOfQuestions);
             numberOfQuestions = questions.size();
     }
 
-    private void loadFromDatabase(){
+    private void loadFromDatabase(int desiredNumOfQuestions){
         int numberOfQuestionsInDatabase = db.GetAllQuestionsInt();
-
-        int desiredNumOfQuestions = 5;
 
         int x;
 

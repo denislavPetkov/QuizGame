@@ -1,5 +1,7 @@
 package com.example.pmu_project.activities.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -19,6 +21,7 @@ import com.example.pmu_project.activities.ResultsActivity;
 import com.example.pmu_project.activities.adapters.MyItemRecyclerViewAdapter;
 import com.example.pmu_project.exception.EmptyDatabaseException;
 import com.example.pmu_project.service.CurrentSessionRepositoryService;
+import com.example.pmu_project.service.MessageHelperService;
 import com.example.pmu_project.service.impl.RepositoryServiceImpl;
 
 import java.io.Serializable;
@@ -30,6 +33,7 @@ public class MainMenuFragment extends Fragment {
     private Button doQuizButton;
     private Button deleteSavedResultsButton;
     private Button continueCurrentSessionButton;
+    private String greyColorString = "#808080";
 
     public MainMenuFragment() {
         // Required empty public constructor
@@ -63,15 +67,37 @@ public class MainMenuFragment extends Fragment {
         continueCurrentSessionButton = view.findViewById(R.id.continueCurrentSessionButton);
 
         if (!currentSessionRepository.SavedSession()){
-            continueCurrentSessionButton.setBackgroundColor(Color.parseColor("#808080"));
+            continueCurrentSessionButton.setBackgroundColor(Color.parseColor(greyColorString));
             continueCurrentSessionButton.setEnabled(false);
         }
 
         doQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentSessionRepository.DeleteSavedResults();
-                MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class));
+
+                String[] numberOfQuestions = {"5","10","15"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainMenuFragment.this.getContext());
+
+                builder.setTitle("Избери броят на въпросите!").setCancelable(true);
+                builder.setItems(numberOfQuestions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        switch (which){
+                            case 0:
+                                startQuizWithQuestions(5, currentSessionRepository);
+                                return;
+                            case 1:
+                                startQuizWithQuestions(10, currentSessionRepository);
+                                return;
+                            case 2:
+                                startQuizWithQuestions(15, currentSessionRepository);
+                                return;
+                        }
+                    }
+                });
+
+                builder.create().show();
                 return;
             }
         });
@@ -89,9 +115,9 @@ public class MainMenuFragment extends Fragment {
 
                 } catch (EmptyDatabaseException e) {
                     recyclerView.setAdapter(new MyItemRecyclerViewAdapter(Collections.emptyList()));
-                    // history cleared msg
                 }
 
+                MessageHelperService.ShowMessage(MainMenuFragment.this.getContext(),"Историята е изтрита!");
                 continueCurrentSessionButton.setBackgroundColor(Color.parseColor("#808080"));
                 continueCurrentSessionButton.setClickable(false);
 
@@ -108,12 +134,15 @@ public class MainMenuFragment extends Fragment {
                 } catch (EmptyDatabaseException e) {
                     e.printStackTrace();
                 }
-                // open quiz with extra
-                // in quiz check for extra for info like currentQuestion and left queistions to answer
             }
         });
 
         return view;
+    }
+
+    private void startQuizWithQuestions(int numberOfQuestions, CurrentSessionRepositoryService currentSessionRepository){
+        MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class).putExtra(QuizActivity.numberOfQuestions, numberOfQuestions));
+        currentSessionRepository.DeleteSavedResults();
     }
 
 }
