@@ -37,6 +37,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     private static final String KEY_QUESTION = "question";
     private static final String KEY_QUESTION_ANSWER = "questionAnswer";
+    private static final String KEY_QUESTION_ID = "questionId";
     private static final String KEY_QUESTION_USER_ANSWER = "questionUserAnswer";
 
 
@@ -46,29 +47,30 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_CURRENT_SESSION
-                + "("
-                + KEY_ID                    + " INTEGER PRIMARY KEY,"
-                + KEY_QUESTION              + " TEXT NOT NULL UNIQUE,"
-                + KEY_QUESTION_ANSWER       + " TEXT NOT NULL,"
-                + KEY_QUESTION_USER_ANSWER  + " TEXT"
-                + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
-
-        CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_QUESTIONS
+        String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_QUESTIONS
                 + "("
                 + KEY_ID                    + " INTEGER PRIMARY KEY,"
                 + KEY_QUESTION              + " TEXT NOT NULL UNIQUE,"
                 + KEY_QUESTION_ANSWER       + " TEXT NOT NULL"
                 + ")";
+
         db.execSQL(CREATE_CONTACTS_TABLE);
+
+        CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_CURRENT_SESSION
+                + "("
+                + KEY_ID                    + " INTEGER PRIMARY KEY,"
+                + KEY_QUESTION_USER_ANSWER  + " TEXT,"
+                + KEY_QUESTION_ID           + " INTEGER, FOREIGN KEY(" +KEY_QUESTION_ID+ ") REFERENCES "+TABLE_NAME_QUESTIONS+"("+KEY_ID+")"
+                + ")";
+        db.execSQL(CREATE_CONTACTS_TABLE);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int
             newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_CURRENT_SESSION + "'");
         db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_QUESTIONS + "'");
+        db.execSQL("DROP TABLE IF EXISTS '" + TABLE_NAME_CURRENT_SESSION + "'");
         onCreate(db);
     }
 
@@ -89,14 +91,12 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     private boolean isQuestionAlreadyInserted(String name){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(
-                TABLE_NAME_CURRENT_SESSION,
-                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
-                KEY_QUESTION + "=?",
-                new String[] {name},
-                null, null, null,
-                null
-        );
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_CURRENT_SESSION + " INNER JOIN " +
+                                TABLE_NAME_QUESTIONS + " ON " + TABLE_NAME_QUESTIONS + "." + KEY_ID +
+                                " = " + TABLE_NAME_CURRENT_SESSION + "." + KEY_QUESTION_ID + " WHERE " +
+                                TABLE_NAME_QUESTIONS + "." + KEY_QUESTION + "=?",
+                new String[]{String.valueOf(name)});
 
         return cursor.moveToFirst();
     }
@@ -106,11 +106,11 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         ContentValues values = new ContentValues();
 
         for (Map.Entry<Question, String> entry : questionsAndAnswers.entrySet()) {
-            values.put(KEY_QUESTION, entry.getKey().getQuestion());
-            values.put(KEY_QUESTION_ANSWER, entry.getKey().getAnswer());
+            int questionId = getQuestionId(entry.getKey());
+            values.put(KEY_QUESTION_ID, questionId);
             values.put(KEY_QUESTION_USER_ANSWER, entry.getValue());
             if (isQuestionAlreadyInserted(entry.getKey().getQuestion())){
-                db.update(TABLE_NAME_CURRENT_SESSION, values, KEY_QUESTION + "= ?", new String[]{ entry.getKey().getQuestion()});
+                db.update(TABLE_NAME_CURRENT_SESSION, values, KEY_QUESTION_ID + "= ?", new String[]{ Integer.toString(questionId)});
                 continue;
             }
             db.insert(TABLE_NAME_CURRENT_SESSION, null, values);
@@ -124,7 +124,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_CURRENT_SESSION,
-                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
+                new String[] { KEY_ID, KEY_QUESTION_ID, KEY_QUESTION_USER_ANSWER},
                 KEY_QUESTION_USER_ANSWER + " IS NULL",
                 null,
                 null, null, null,
@@ -138,7 +138,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_CURRENT_SESSION,
-                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
+                new String[] { KEY_ID, KEY_QUESTION_ID, KEY_QUESTION_USER_ANSWER},
                 KEY_QUESTION_USER_ANSWER + " IS NOT NULL",
                 null,
                 null, null, null,
@@ -151,8 +151,11 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
 
     public int GetCorrectlyAnsweredQuestionsInt() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_CURRENT_SESSION + " WHERE " + KEY_QUESTION_ANSWER + "=" + KEY_QUESTION_USER_ANSWER,
-                                        new String[]{});
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME_CURRENT_SESSION + " INNER JOIN " +
+                TABLE_NAME_QUESTIONS + " ON " + TABLE_NAME_QUESTIONS + "." + KEY_ID +
+                " = " + TABLE_NAME_CURRENT_SESSION + "." + KEY_QUESTION_ID + " WHERE " +
+                TABLE_NAME_QUESTIONS + "." + KEY_QUESTION + "=" + TABLE_NAME_CURRENT_SESSION + "." + KEY_QUESTION_USER_ANSWER,
+                new String[]{});
 
 
         return cursor.getCount();
@@ -162,7 +165,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_CURRENT_SESSION,
-                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
+                new String[] { KEY_ID, KEY_QUESTION_ID, KEY_QUESTION_USER_ANSWER},
                 KEY_QUESTION_USER_ANSWER + " IS NOT NULL",
                 null,
                 null, null, null,
@@ -176,9 +179,12 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         }
 
        do{
-           previousResults.add(cursor.getString(1) + "\nотговор: " +
-                   cursor.getString(2) + "\nтвоят отговор: " +
-                   cursor.getString(3) + "\n");
+           Question question = GetQuestion(Integer.parseInt(cursor.getString(1)));
+           previousResults.add(
+                   question.getQuestion() + "\nотговор: " +
+                   question.getAnswer() + "\nтвоят отговор: " +
+                   cursor.getString(2) + "\n"
+           );
        }while (cursor.moveToPrevious());
 
         return previousResults;
@@ -195,7 +201,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_CURRENT_SESSION,
-                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER, KEY_QUESTION_USER_ANSWER},
+                new String[] { KEY_ID, KEY_QUESTION_ID, KEY_QUESTION_USER_ANSWER},
                 null,
                 null,
                 null, null, null,
@@ -208,19 +214,20 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         HashMap<Question, String> questionsAndUserAnswers =  new HashMap<>();
 
         do{
-            questionsAndUserAnswers.put(new Question(cursor.getString(1),cursor.getString(2)), cursor.getString(3));
+            Question question = GetQuestion(Integer.parseInt(cursor.getString(1)));
+            questionsAndUserAnswers.put(new Question(question.getQuestion(),question.getAnswer()), cursor.getString(2));
         } while (cursor.moveToNext());
 
         return questionsAndUserAnswers;
     }
 
-    public Question GetQuestion(int x) throws EmptyDatabaseException {
+    public Question GetQuestion(int id) throws EmptyDatabaseException {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
                 TABLE_NAME_QUESTIONS,
                 new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER},
                 KEY_ID + "=?",
-                new String[] {String.valueOf(x)},
+                new String[] {String.valueOf(id)},
                 null, null, null,
                 null
         );
@@ -244,6 +251,22 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
         }
 
         db.close();
+    }
+
+    private int getQuestionId(Question question){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_NAME_QUESTIONS,
+                new String[] { KEY_ID, KEY_QUESTION, KEY_QUESTION_ANSWER},
+                KEY_QUESTION + "=?",
+                new String[] {question.getQuestion()},
+                null, null, null,
+                null
+        );
+        if (cursor.moveToFirst()){
+            return Integer.parseInt(cursor.getString(0));
+        }
+        return 0;
     }
 
     private boolean doQuestionExistInDb(Question question){

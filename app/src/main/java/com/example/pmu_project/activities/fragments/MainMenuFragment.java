@@ -19,6 +19,7 @@ import com.example.pmu_project.R;
 import com.example.pmu_project.activities.QuizActivity;
 import com.example.pmu_project.activities.ResultsActivity;
 import com.example.pmu_project.activities.adapters.MyItemRecyclerViewAdapter;
+import com.example.pmu_project.data.enteties.Question;
 import com.example.pmu_project.exception.EmptyDatabaseException;
 import com.example.pmu_project.service.CurrentSessionRepositoryService;
 import com.example.pmu_project.service.MessageHelperService;
@@ -26,6 +27,7 @@ import com.example.pmu_project.service.impl.RepositoryServiceImpl;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainMenuFragment extends Fragment {
@@ -69,6 +71,12 @@ public class MainMenuFragment extends Fragment {
         if (!currentSessionRepository.SavedSession()){
             continueCurrentSessionButton.setBackgroundColor(Color.parseColor(greyColorString));
             continueCurrentSessionButton.setEnabled(false);
+        }
+        HashMap<Question, String> f;
+        try {
+            f = currentSessionRepository.GetQuestionsAndAnswers();
+        } catch (EmptyDatabaseException e) {
+            e.printStackTrace();
         }
 
         doQuizButton.setOnClickListener(new View.OnClickListener() {
