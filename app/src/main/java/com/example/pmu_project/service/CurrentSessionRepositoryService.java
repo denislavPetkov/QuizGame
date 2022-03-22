@@ -15,5 +15,4 @@ public interface CurrentSessionRepositoryService {
     public HashMap<Question, String> GetQuestionsAndAnswers() throws EmptyDatabaseException;
     public void AddAnsweredQuestions(HashMap<Question, String> questionAndAnswers);
     public boolean SavedSession();
-
 }

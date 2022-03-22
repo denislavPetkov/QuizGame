@@ -69,6 +69,4 @@ public class QuestionGeneratorServiceImpl implements QuestionGeneratorService {
     public int GetAllQuestionsInt(){
         return numberOfQuestions;
     }
-
-
 }

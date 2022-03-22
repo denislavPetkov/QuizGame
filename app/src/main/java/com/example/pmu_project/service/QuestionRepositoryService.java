@@ -9,6 +9,4 @@ import java.util.Map;
 public interface QuestionRepositoryService {
     public int GetAllQuestionsInt();
     public Question GetQuestion(int x) throws EmptyDatabaseException;
-
-
 }
