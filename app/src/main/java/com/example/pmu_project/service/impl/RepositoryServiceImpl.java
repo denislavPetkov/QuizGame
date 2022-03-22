@@ -60,7 +60,7 @@ public class RepositoryServiceImpl extends SQLiteOpenHelper implements QuestionR
                 + "("
                 + KEY_ID                    + " INTEGER PRIMARY KEY,"
                 + KEY_QUESTION_USER_ANSWER  + " TEXT,"
-                + KEY_QUESTION_ID           + " INTEGER, FOREIGN KEY(" +KEY_QUESTION_ID+ ") REFERENCES "+TABLE_NAME_QUESTIONS+"("+KEY_ID+")"
+                + KEY_QUESTION_ID           + " INTEGER UNIQUE, FOREIGN KEY(" +KEY_QUESTION_ID+ ") REFERENCES "+TABLE_NAME_QUESTIONS+"("+KEY_ID+")"
                 + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
 
