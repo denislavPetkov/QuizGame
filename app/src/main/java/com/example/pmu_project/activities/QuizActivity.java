@@ -40,6 +40,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button saveResultsGoToMenuButton;
 
     private final QuestionRepositoryService questionRepository = new RepositoryServiceImpl(this);
+    private final CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(this);
 
     private QuestionGeneratorService questionGenerator = null;
     private Question question;
@@ -64,6 +65,8 @@ public class QuizActivity extends AppCompatActivity {
         lastSession = (HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
         Serializable questions = intent.getSerializableExtra(QuizActivity.numberOfQuestions);
 
+        currentSession = new CurrentSessionServiceImpl();
+
         if (questions != null){
             numberOfQuestionsInt = (Integer) intent.getSerializableExtra(QuizActivity.numberOfQuestions);
         }
@@ -74,19 +77,13 @@ public class QuizActivity extends AppCompatActivity {
             handleLastSession();
         }
 
-    }
-
-    private void handleLastSession() {
-        allQuestions = lastSession.size();
-        CurrentSessionRepositoryService db = new RepositoryServiceImpl(this);
-        currentQuestion = db.GetAnsweredQuestionsInt();
-        currentSession = new CurrentSessionServiceImpl();
         generateQuestion();
         updateTitle();
+
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentSession.AddAnsweredQuestion(question,  WordUtils.capitalize(answerTextView.getText().toString()));
+                currentSession.AddAnsweredQuestion(question,  WordUtils.capitalize(answerTextView.getText().toString().trim()));
                 if (currentQuestion == allQuestions) {
                     QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class).putExtra(currentSessionDataExtra,
                             (Serializable) currentSession.GetAnsweredQuestions()));
@@ -98,51 +95,32 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
         });
-        saveResultsGoToMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentSession.AddAnsweredQuestion(question, null);
-                db.AddAnsweredQuestions(currentSession.GetAnsweredQuestions());
-                QuizActivity.this.startActivity(new Intent(QuizActivity.this, MainActivity.class));
-                return;
-            }
-        });
-    }
 
-    private void handleNewQuiz(int questions) {
-        questionGenerator = new QuestionGeneratorServiceImpl(questionRepository,questions);
-        currentSession = new CurrentSessionServiceImpl();
-        generateQuestion();
-        updateTitle();
-        submitAnswerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentSession.AddAnsweredQuestion(question,  WordUtils.capitalize(answerTextView.getText().toString()));
-                if (currentQuestion == allQuestions) {
-                    QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class).putExtra(currentSessionDataExtra,
-                            (Serializable) currentSession.GetAnsweredQuestions()));
-                    return;
-                }
-                generateQuestion();
-                answerTextView.setText("");
-                updateTitle();
-                return;
-            }
-        });
         saveResultsGoToMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentSession.AddAnsweredQuestion(question, null);
-                    for (int i = currentQuestion; i < allQuestions; i++){
-                        currentSession.AddAnsweredQuestion( questionGenerator.GetQuestion(), null);
+                if(lastSession == null) {
+                    currentSession.AddAnsweredQuestion(question, null);
+                    for (int i = currentQuestion; i < allQuestions; i++) {
+                        currentSession.AddAnsweredQuestion(questionGenerator.GetQuestion(), null);
                     }
-                CurrentSessionRepositoryService currentSessionRepository = new RepositoryServiceImpl(QuizActivity.this);
+                }
                 currentSessionRepository.AddAnsweredQuestions(currentSession.GetAnsweredQuestions());
                 QuizActivity.this.startActivity(new Intent(QuizActivity.this, MainActivity.class));
                 MessageHelperService.ShowMessage(QuizActivity.this,"Сесията е запазена успешно!");
                 return;
             }
         });
+    }
+
+    private void handleLastSession() {
+        allQuestions = lastSession.size();
+        currentQuestion = currentSessionRepository.GetAnsweredQuestionsInt();
+    }
+
+    private void handleNewQuiz(int questions) {
+        questionGenerator = new QuestionGeneratorServiceImpl(questionRepository,questions);
+        allQuestions = questionGenerator.GetAllQuestionsInt();
     }
 
     private void updateTitle(){
@@ -155,7 +133,6 @@ public class QuizActivity extends AppCompatActivity {
             generateQuestionFromLastSessionSession(lastSession);
             return;
         }
-        allQuestions = questionGenerator.GetAllQuestionsInt();
         question = questionGenerator.GetQuestion();
         questionTextView.setText(question.getQuestion());
     }
