@@ -69,9 +69,12 @@ public class MainMenuFragment extends Fragment {
         continueCurrentSessionButton = view.findViewById(R.id.continueCurrentSessionButton);
 
         if (!currentSessionRepository.SavedSession()){
-            continueCurrentSessionButton.setBackgroundColor(Color.parseColor(greyColorString));
-            continueCurrentSessionButton.setEnabled(false);
+            setButtonDisabled(continueCurrentSessionButton);
+            if (currentSessionRepository.GetAnsweredQuestionsInt()<=0){
+                setButtonDisabled(deleteSavedResultsButton);
+            }
         }
+
         HashMap<Question, String> f;
         try {
             f = currentSessionRepository.GetQuestionsAndAnswers();
@@ -126,8 +129,8 @@ public class MainMenuFragment extends Fragment {
                 }
 
                 MessageHelperService.ShowMessage(MainMenuFragment.this.getContext(),"Историята е изтрита!");
-                continueCurrentSessionButton.setBackgroundColor(Color.parseColor("#808080"));
-                continueCurrentSessionButton.setClickable(false);
+                setButtonDisabled(continueCurrentSessionButton);
+                setButtonDisabled(deleteSavedResultsButton);
 
                 return;
             }
@@ -151,6 +154,11 @@ public class MainMenuFragment extends Fragment {
     private void startQuizWithQuestions(int numberOfQuestions, CurrentSessionRepositoryService currentSessionRepository){
         MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class).putExtra(QuizActivity.numberOfQuestions, numberOfQuestions));
         currentSessionRepository.DeleteSavedResults();
+    }
+
+    private void setButtonDisabled(Button button){
+        button.setBackgroundColor(Color.parseColor(greyColorString));
+        button.setEnabled(false);
     }
 
 }
