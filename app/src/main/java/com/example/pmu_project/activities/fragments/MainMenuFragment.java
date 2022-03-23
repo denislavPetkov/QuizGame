@@ -75,13 +75,6 @@ public class MainMenuFragment extends Fragment {
             }
         }
 
-        HashMap<Question, String> f;
-        try {
-            f = currentSessionRepository.GetQuestionsAndAnswers();
-        } catch (EmptyDatabaseException e) {
-            e.printStackTrace();
-        }
-
         doQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -100,8 +100,6 @@ public class QuizActivity extends AppCompatActivity {
 
             question = (Question) savedInstanceState.getSerializable(questionPreviousState);
             questionTextView.setText(question.getQuestion());
-
-            setTitle("Въпрос " + currentQuestion + "/" + allQuestions);
         } else {
             currentSession = new CurrentSessionServiceImpl();
 
@@ -116,8 +114,8 @@ public class QuizActivity extends AppCompatActivity {
             }
 
             generateQuestion();
-            updateTitle();
         }
+        updateTitle();
 
 
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
