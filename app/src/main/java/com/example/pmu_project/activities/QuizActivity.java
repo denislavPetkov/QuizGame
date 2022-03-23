@@ -1,9 +1,11 @@
 package com.example.pmu_project.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +14,7 @@ import com.example.pmu_project.MainActivity;
 import com.example.pmu_project.R;
 import com.example.pmu_project.activities.fragments.MainMenuFragment;
 import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.exception.EmptyDatabaseException;
 import com.example.pmu_project.service.CurrentSessionRepositoryService;
 import com.example.pmu_project.service.CurrentSessionService;
 import com.example.pmu_project.service.MessageHelperService;
@@ -33,6 +36,13 @@ public class QuizActivity extends AppCompatActivity {
     public final static String currentSessionDataExtra = "currentSession";
     public final static String numberOfQuestions = "numberOfQuestions";
 
+    public final static String currentSessionPreviousState = "currentSessionPreviousState";
+    public final static String currentQuestionPreviousState = "currentQuestionPreviousState";
+    public final static String allQuestionsPreviousState = "allQuestionsPreviousState";
+    public final static String questionPreviousState = "questionPreviousState";
+    public final static String questionGeneratorPreviousState = "questionGeneratorPreviousState";
+    public final static String titlePreviousState = "titlePreviousState";
+
     private TextView questionTextView;
     private TextView answerTextView;
 
@@ -52,6 +62,23 @@ public class QuizActivity extends AppCompatActivity {
     private int numberOfQuestionsInt=0;
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(allQuestionsPreviousState, allQuestions);
+        savedInstanceState.putInt(currentQuestionPreviousState, currentQuestion);
+        savedInstanceState.putSerializable(currentSessionPreviousState, (Serializable) currentSession);
+        savedInstanceState.putSerializable(questionPreviousState, question);
+        try {
+            if (currentQuestion != allQuestions && currentSessionRepository.GetQuestionsAndAnswers().size() != allQuestions){
+                savedInstanceState.putSerializable(questionGeneratorPreviousState, (Serializable) questionGenerator);
+            }
+        } catch (EmptyDatabaseException e) {
+            // it should not happen, so just print the stack trace
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
@@ -65,20 +92,33 @@ public class QuizActivity extends AppCompatActivity {
         lastSession = (HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
         Serializable questions = intent.getSerializableExtra(QuizActivity.numberOfQuestions);
 
-        currentSession = new CurrentSessionServiceImpl();
+        if (savedInstanceState != null){
+            currentSession = (CurrentSessionService) savedInstanceState.getSerializable(currentSessionPreviousState);
+            currentQuestion = savedInstanceState.getInt(currentQuestionPreviousState);
+            allQuestions = savedInstanceState.getInt(allQuestionsPreviousState);
+            questionGenerator = (QuestionGeneratorService) savedInstanceState.getSerializable(questionGeneratorPreviousState);
 
-        if (questions != null){
-            numberOfQuestionsInt = (Integer) intent.getSerializableExtra(QuizActivity.numberOfQuestions);
-        }
+            question = (Question) savedInstanceState.getSerializable(questionPreviousState);
+            questionTextView.setText(question.getQuestion());
 
-        if(lastSession == null){
-            handleNewQuiz(numberOfQuestionsInt);
+            setTitle("Въпрос " + currentQuestion + "/" + allQuestions);
         } else {
-            handleLastSession();
+            currentSession = new CurrentSessionServiceImpl();
+
+            if (questions != null){
+                numberOfQuestionsInt = (Integer) intent.getSerializableExtra(QuizActivity.numberOfQuestions);
+            }
+
+            if(lastSession == null){
+                handleNewQuiz(numberOfQuestionsInt);
+            } else {
+                handleLastSession();
+            }
+
+            generateQuestion();
+            updateTitle();
         }
 
-        generateQuestion();
-        updateTitle();
 
         submitAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +126,7 @@ public class QuizActivity extends AppCompatActivity {
                 currentSession.AddAnsweredQuestion(question,  WordUtils.capitalize(answerTextView.getText().toString().trim()));
                 if (currentQuestion == allQuestions) {
                     QuizActivity.this.startActivity(new Intent(QuizActivity.this, ResultsActivity.class).putExtra(currentSessionDataExtra,
-                            (Serializable) currentSession.GetAnsweredQuestions()));
+                            currentSession.GetAnsweredQuestions()));
                     return;
                 }
                 generateQuestion();

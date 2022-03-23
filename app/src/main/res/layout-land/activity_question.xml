@@ -22,7 +22,7 @@
         android:id="@+id/questionTextView"
         android:layout_width="357dp"
         android:layout_height="65dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toTopOf="@+id/answerEditText"
