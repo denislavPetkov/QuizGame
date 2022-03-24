@@ -1,4 +1,4 @@
-package com.example.pmu_project.data.enteties;
+package com.example.pmu_project.data.entities;
 
 import java.io.Serializable;
 

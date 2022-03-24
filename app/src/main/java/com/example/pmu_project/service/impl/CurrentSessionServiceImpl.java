@@ -1,6 +1,6 @@
 package com.example.pmu_project.service.impl;
 
-import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.data.entities.Question;
 import com.example.pmu_project.service.CurrentSessionService;
 
 import java.util.HashMap;

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,9 +16,7 @@ import android.widget.Button;
 
 import com.example.pmu_project.R;
 import com.example.pmu_project.activities.QuizActivity;
-import com.example.pmu_project.activities.ResultsActivity;
 import com.example.pmu_project.activities.adapters.MyItemRecyclerViewAdapter;
-import com.example.pmu_project.data.enteties.Question;
 import com.example.pmu_project.exception.EmptyDatabaseException;
 import com.example.pmu_project.service.CurrentSessionRepositoryService;
 import com.example.pmu_project.service.MessageHelperService;
@@ -27,7 +24,6 @@ import com.example.pmu_project.service.impl.RepositoryServiceImpl;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainMenuFragment extends Fragment {

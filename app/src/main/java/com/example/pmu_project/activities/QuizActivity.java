@@ -1,19 +1,15 @@
 package com.example.pmu_project.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.pmu_project.MainActivity;
 import com.example.pmu_project.R;
-import com.example.pmu_project.activities.fragments.MainMenuFragment;
-import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.data.entities.Question;
 import com.example.pmu_project.exception.EmptyDatabaseException;
 import com.example.pmu_project.service.CurrentSessionRepositoryService;
 import com.example.pmu_project.service.CurrentSessionService;
@@ -28,7 +24,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.*;
 import org.apache.commons.text.WordUtils;
 
 public class QuizActivity extends AppCompatActivity {
@@ -41,7 +36,6 @@ public class QuizActivity extends AppCompatActivity {
     public final static String allQuestionsPreviousState = "allQuestionsPreviousState";
     public final static String questionPreviousState = "questionPreviousState";
     public final static String questionGeneratorPreviousState = "questionGeneratorPreviousState";
-    public final static String titlePreviousState = "titlePreviousState";
 
     private TextView questionTextView;
     private TextView answerTextView;

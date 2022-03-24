@@ -14,9 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pmu_project.MainActivity;
 import com.example.pmu_project.R;
-import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.data.entities.Question;
 import com.example.pmu_project.exception.EmptyDatabaseException;
 import com.example.pmu_project.service.CurrentSessionRepositoryService;
 import com.example.pmu_project.service.impl.RepositoryServiceImpl;

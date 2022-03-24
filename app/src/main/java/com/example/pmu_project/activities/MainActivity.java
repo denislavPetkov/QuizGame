@@ -1,4 +1,4 @@
-package com.example.pmu_project;
+package com.example.pmu_project.activities;
 
 import android.os.Bundle;
 

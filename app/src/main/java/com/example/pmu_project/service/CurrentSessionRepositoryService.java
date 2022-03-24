@@ -1,11 +1,10 @@
 package com.example.pmu_project.service;
 
-import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.data.entities.Question;
 import com.example.pmu_project.exception.EmptyDatabaseException;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface CurrentSessionRepositoryService {
     public int GetAnsweredQuestionsInt();

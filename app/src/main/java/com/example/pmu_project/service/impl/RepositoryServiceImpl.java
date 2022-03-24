@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.pmu_project.data.enteties.Question;
+import com.example.pmu_project.data.entities.Question;
 import com.example.pmu_project.exception.EmptyDatabaseException;
 import com.example.pmu_project.service.GeneralRepositoryService;
 import com.example.pmu_project.service.QuestionRepositoryService;
