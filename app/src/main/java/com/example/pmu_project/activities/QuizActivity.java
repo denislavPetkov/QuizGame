@@ -29,7 +29,7 @@ import org.apache.commons.text.WordUtils;
 public class QuizActivity extends AppCompatActivity {
 
     public final static String currentSessionDataExtra = "currentSession";
-    public final static String numberOfQuestions = "numberOfQuestions";
+    public final static String numberOfQuestionsExtra = "numberOfQuestions";
 
     public final static String currentSessionPreviousState = "currentSessionPreviousState";
     public final static String currentQuestionPreviousState = "currentQuestionPreviousState";
@@ -84,7 +84,7 @@ public class QuizActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         lastSession = (HashMap<Question, String>) intent.getSerializableExtra(QuizActivity.currentSessionDataExtra);
-        Serializable questions = intent.getSerializableExtra(QuizActivity.numberOfQuestions);
+        Serializable questions = intent.getSerializableExtra(QuizActivity.numberOfQuestionsExtra);
 
         if (savedInstanceState != null){
             currentSession = (CurrentSessionService) savedInstanceState.getSerializable(currentSessionPreviousState);
@@ -98,7 +98,7 @@ public class QuizActivity extends AppCompatActivity {
             currentSession = new CurrentSessionServiceImpl();
 
             if (questions != null){
-                numberOfQuestionsInt = (Integer) intent.getSerializableExtra(QuizActivity.numberOfQuestions);
+                numberOfQuestionsInt = (Integer) intent.getSerializableExtra(QuizActivity.numberOfQuestionsExtra);
             }
 
             if(lastSession == null){

@@ -141,7 +141,7 @@ public class MainMenuFragment extends Fragment {
     }
 
     private void startQuizWithQuestions(int numberOfQuestions, CurrentSessionRepositoryService currentSessionRepository){
-        MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class).putExtra(QuizActivity.numberOfQuestions, numberOfQuestions));
+        MainMenuFragment.this.startActivity(new Intent(MainMenuFragment.this.getContext(), QuizActivity.class).putExtra(QuizActivity.numberOfQuestionsExtra, numberOfQuestions));
         currentSessionRepository.DeleteSavedResults();
     }
 
