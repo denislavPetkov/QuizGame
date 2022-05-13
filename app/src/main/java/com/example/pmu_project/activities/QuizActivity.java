@@ -62,14 +62,9 @@ public class QuizActivity extends AppCompatActivity {
         savedInstanceState.putInt(currentQuestionPreviousState, currentQuestion);
         savedInstanceState.putSerializable(currentSessionPreviousState, (Serializable) currentSession);
         savedInstanceState.putSerializable(questionPreviousState, question);
-        try {
-            if (currentQuestion != allQuestions && currentSessionRepository.GetQuestionsAndAnswers().size() != allQuestions){
+            if (currentQuestion != allQuestions && currentSession.GetAnsweredQuestions().size() != allQuestions){
                 savedInstanceState.putSerializable(questionGeneratorPreviousState, (Serializable) questionGenerator);
             }
-        } catch (EmptyDatabaseException e) {
-            // it should not happen, so just print the stack trace
-            e.printStackTrace();
-        }
     }
 
     @Override
